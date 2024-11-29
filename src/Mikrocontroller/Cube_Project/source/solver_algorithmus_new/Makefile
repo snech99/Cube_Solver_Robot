@@ -1,0 +1,2 @@
+main: cube.cpp cube.h main.cpp rotate.cpp example_cubes.h game.h game.cpp solve_first_layer.cpp solve_second_layer.cpp solve_third_layer.cpp do_magic.h do_magic.cpp
+	g++ -o main cube.cpp cube.h main.cpp rotate.cpp example_cubes.h game.h game.cpp solve_first_layer.cpp solve_second_layer.cpp solve_third_layer.cpp do_magic.h do_magic.cpp -ggdb
