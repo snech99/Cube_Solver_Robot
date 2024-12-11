@@ -21,7 +21,7 @@ char buf_name_blue[] = "blau";
 
 char buf_back[] = "back";
 
-uint8_t cube_array[54] = {};
+int cube_array[54] = {};
 
 uint8_t cube_message[61];
 
@@ -59,6 +59,20 @@ void config_to_man_Handler(void)
 
 void auto_to_random_Handler(void)
 {
+	move_motor(1,250);
+	move_motor(7,250);
+	move_motor(2,250);
+	move_motor(8,250);
+	move_motor(3,250);
+	move_motor(9,250);
+	move_motor(4,250);
+	move_motor(10,250);
+	move_motor(5,250);
+	move_motor(11,250);
+	move_motor(6,250);
+	move_motor(12,250);
+
+	/*
 	uint8_t erg = get_rand_num();
 	char print_num[] =  {'0'};
 
@@ -72,6 +86,7 @@ void auto_to_random_Handler(void)
 	ssd1309_SetCursor(85,51);
 	ssd1309_WriteString(buf_back,Font_7x10, White);
 	ssd1309_UpdateScreen();
+	*/
 }
 
 void auto_to_read_color_Handler(void)
@@ -133,39 +148,6 @@ void auto_to_read_color_Handler(void)
 	}
 
 
-	/*
-	switch (detected_color)
-	{
-		case c_white:
-			ssd1309_SetCursor(38,20);
-			ssd1309_WriteString(buf_name_white, Font_11x18, White);
-			break;
-		case c_yellow:
-			ssd1309_SetCursor(33,20);
-			ssd1309_WriteString(buf_name_yellow, Font_11x18, White);
-			break;
-		case c_red:
-			ssd1309_SetCursor(49,20);
-			ssd1309_WriteString(buf_name_red, Font_11x18, White);
-			break;
-		case c_green:
-			ssd1309_SetCursor(38,20);
-			ssd1309_WriteString(buf_name_green, Font_11x18, White);
-			break;
-		case c_orange:
-			ssd1309_SetCursor(33,20);
-			ssd1309_WriteString(buf_name_orange, Font_11x18, White);
-			break;
-		case c_blue:
-			ssd1309_SetCursor(46,20);
-			ssd1309_WriteString(buf_name_blue, Font_11x18, White);
-			break;
-		default:
-			break;
-	}
-
-	 */
-
 	GPIO_PinWrite(GPIO2,LED_SWITCH_PIN, 0);
 	ssd1309_SetCursor(85,51);
 	ssd1309_WriteString(buf_back,Font_7x10, White);
@@ -185,16 +167,16 @@ void auto_to_solve_Handler(void)
 	uint32_t erg = 0;
 	uint32_t time = 0;
 
-	set_bsp_02();
-	set_bsp_03();
-	set_bsp_04();
+	//set_bsp_02();
+	//set_bsp_03();
+	//set_bsp_04();
 
 	for( uint8_t i=0; i<200; i++)
 	{
 		move_array_final[i]={0};
 	}
 
-	if(bsp_cube_04[0] == 0)
+	if(cube_array[0] == 0)
 	{
 		ssd1309_Fill(Black);
 		ssd1309_UpdateScreen();
@@ -216,7 +198,7 @@ void auto_to_solve_Handler(void)
 	else
 	{
 		tick_start = tick_count;
-		erg = do_magic(bsp_cube_04, move_array_final);
+		erg = do_magic(cube_array, move_array_final);
 		tick_end = tick_count;
 
 		time = calc_time_ms();
@@ -251,18 +233,15 @@ void auto_to_solve_Handler(void)
 
 void solve_to_fast_Handler(void)
 {
-	/*
-	for(uint8_t i=0; i<54; i++)
+	PWM_frequenz = 8000;
+
+	uint16_t pos = 0;
+
+	while(move_array_final[pos] != 0)
 	{
-		cube_array[i] = 0;
+		move_motor(move_array_final[pos], 250);
+		pos++;
 	}
-
-	ssd1309_SetCursor(85,51);
-	ssd1309_WriteString(buf_back,Font_7x10, White);
-
-	ssd1309_UpdateScreen();
-
-	*/
 
 	ssd1309_Fill(Black);
 	ssd1309_UpdateScreen();
@@ -273,68 +252,18 @@ void solve_to_fast_Handler(void)
 
 void solve_to_slow_Handler(void)
 {
-	uint8_t color;
+	uint16_t pos = 0;
 
-	move_servo(18);
-	move_servo(15);
-	color = get_color();
+	PWM_frequenz = 2000;
+
+	while(move_array_final[pos] != 0)
+	{
+		move_motor(move_array_final[pos], 250);
+		pos++;
+	}
 
 	ssd1309_Fill(Black);
 	ssd1309_UpdateScreen();
-
-	switch (color)
-	{
-		case c_white:
-			ssd1309_SetCursor(38,20);
-			ssd1309_WriteString(buf_name_white, Font_11x18, White);
-			break;
-		case c_yellow:
-			ssd1309_SetCursor(33,20);
-			ssd1309_WriteString(buf_name_yellow, Font_11x18, White);
-			break;
-		case c_red:
-			ssd1309_SetCursor(49,20);
-			ssd1309_WriteString(buf_name_red, Font_11x18, White);
-			break;
-		case c_green:
-			ssd1309_SetCursor(38,20);
-			ssd1309_WriteString(buf_name_green, Font_11x18, White);
-			break;
-		case c_orange:
-			ssd1309_SetCursor(33,20);
-			ssd1309_WriteString(buf_name_orange, Font_11x18, White);
-			break;
-		case c_blue:
-			ssd1309_SetCursor(46,20);
-			ssd1309_WriteString(buf_name_blue, Font_11x18, White);
-			break;
-		default:
-			break;
-	}
-
-	ssd1309_UpdateScreen();
-	move_servo(18);
-
-	/*
-	move_motor(7, 250);
-	move_motor(1, 250);
-
-	move_motor(8, 250);
-	move_motor(2, 250);
-
-	move_motor(9, 250);
-	move_motor(3, 250);
-
-	move_motor(10, 250);
-	move_motor(4, 250);
-
-	move_motor(11, 250);
-	move_motor(5, 250);
-
-	move_motor(12, 250);
-	move_motor(6, 250);
-	*/
-
 	ssd1309_SetCursor(85,51);
 	ssd1309_WriteString(buf_back,Font_7x10, White);
 	ssd1309_UpdateScreen();
@@ -412,26 +341,6 @@ void man_to_read_color_Handler(void)
 	ssd1309_SetCursor(60,30);
 	ssd1309_WriteString(buf,Font_7x10, White);
 	ssd1309_UpdateScreen();
-
-	/*
-	for(uint8_t i=0; i<6; i++)
-	{
-		move_servo(15);
-
-		for(uint8_t k=0; k<8; k++)
-		{
-			color = get_color();
-			cube_array [pos_array_read[pos_read]] = color;
-			pos_read++;
-			move_motor(7, 125);
-		}
-
-		move_servo(18);
-		change_sides(i);
-	}
-
-	GPIO_PinWrite(GPIO2,LED_SWITCH_PIN, 0);
-	*/
 }
 
 void man_to_send_cube_Handler(void)

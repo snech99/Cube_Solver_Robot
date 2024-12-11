@@ -56,6 +56,7 @@
 
 #define LED_SWITCH_PIN BOARD_INITSW_LED_SWITCH_PIN
 
+#define NULL_TRIGGER_GPIO BOARD_INITPWM_NULL_TRIGGER_GPIO
 #define NULL_TRIGGER_PIN BOARD_INITPWM_NULL_TRIGGER_PIN
 
 #define LEFT 1
@@ -89,10 +90,9 @@ struct message
 };
 
 extern volatile uint8_t pos_array_read[48];
-
-extern bool pwm_busy_flag;
+extern volatile uint32_t PWM_frequenz;
 extern volatile uint32_t pwm_ms_count;
-extern volatile uint32_t PWM_flanke_count;
+extern volatile int32_t PWM_flanke_count;
 extern uint8_t rx_buffer[BUFFER_MAX];
 extern uint8_t rx_buffer_index;
 extern bool flag_hit_1;
@@ -105,7 +105,9 @@ extern bool SW_flag_BR;
 extern bool color_busy_flag;
 extern bool pwm_busy_flag;
 extern bool pwm_servo_busy_flag;
-extern uint8_t cube_array[54];
+extern bool NULL_flag;
+
+extern int cube_array[54];
 
 extern uint32_t tick_count;
 extern uint32_t tick_start;
@@ -122,6 +124,7 @@ void move_servo(uint8_t);
 void change_sides(uint8_t);
 bool check_colors();
 uint32_t calc_time_ms();
+void config_motor();
 
 
 #endif /* CUBE_PROJECT_H_ */

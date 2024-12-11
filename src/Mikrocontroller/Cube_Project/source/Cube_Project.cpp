@@ -18,21 +18,22 @@ bool SW_flag_BL = false;
 bool SW_flag_BR = false;
 bool color_busy_flag = true;
 bool pwm_busy_flag = false;
+bool NULL_flag = false;
 uint32_t tick_count = 0;
 uint32_t tick_start = 0;
 uint32_t tick_end = 0;
 
 volatile uint32_t pwm_ms_count = 0;
-volatile uint32_t PWM_flanke_count = 250;
-volatile uint32_t PWM_frequenz = 2000; // 1000/rev !!! 8000
+volatile int32_t PWM_flanke_count = 250;
+volatile uint32_t PWM_frequenz = 6000; // 1000/rev !!! 8000
 
 //8kHz -> unter 62.5ms
 
 void TIMER1_CALLBACK_RAMPE(uint32_t flags)
 {
-	if (pwm_ms_count < 199)	//29
+	if (pwm_ms_count < 49)	//29
 	{
-		float add_frequenz = (float)PWM_frequenz/200;
+		float add_frequenz = (float)PWM_frequenz/50;
 		uint32_t new_frequenz = (uint32_t) add_frequenz + (pwm_ms_count*add_frequenz);
 
 		if(new_frequenz == 0)
@@ -183,10 +184,9 @@ extern "C" void GPIO3_IRQHANDLER(void)
 
 	if((hit_flag>>NULL_TRIGGER_PIN) == 1)
 	{
-
+		NULL_flag = true;
 	}
-
-	GPIO_GpioClearInterruptFlags(GPIO3, NULL_TRIGGER_PIN);
+	GPIO_GpioClearInterruptFlags(NULL_TRIGGER_GPIO, 1<<NULL_TRIGGER_PIN);
 }
 
 uint8_t get_rand_num()
@@ -222,6 +222,17 @@ int main(void)
     BOARD_InitBootPins();
     BOARD_InitBootClocks();
     BOARD_InitBootPeripherals();
+
+    const ctimer_match_config_t CTIMER2_Match_0_config_manule = {
+      .matchValue = 2000000,
+      .enableCounterReset = true,
+      .enableCounterStop = true,
+      .outControl = kCTIMER_Output_NoAction,
+      .outPinInitState = false,
+      .enableInterrupt = true
+    };
+    CTIMER_SetupMatch(CTIMER2_PERIPHERAL, CTIMER2_MATCH_0_CHANNEL, &CTIMER2_Match_0_config_manule);
+
 
 	GPIO_PinWrite(BOARD_LED_RED_GPIO, 12, 1);
 	GPIO_PinWrite(BOARD_LED_GREEN_GPIO, 13, 1);
@@ -261,6 +272,9 @@ int main(void)
 
 	ssd1309_UpdateScreen();
 	GPIO_PinWrite(GPIO2,LED_SWITCH_PIN, 1);
+
+	config_motor();
+
 	while(true)
 	{
 	   super_machine();
