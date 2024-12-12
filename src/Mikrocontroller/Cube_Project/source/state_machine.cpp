@@ -313,16 +313,25 @@ void man_to_random_Handler(void)
 
 void man_to_read_color_Handler(void)
 {
-	cube_array [5] = 1;
-	cube_array [14] = 3;
-	cube_array [23] = 6;
-	cube_array [32] = 5;
-	cube_array [41] = 4;
-	cube_array [50] = 2;
+	GPIO_PinWrite(GPIO2,LED_SWITCH_PIN, 1);
 
-    uint8_t color;
-    uint8_t pos_read = 0;
-    GPIO_PinWrite(GPIO2,LED_SWITCH_PIN, 1);
+	char buf[] = "scan";
+
+	ssd1309_Fill(Black);
+	ssd1309_UpdateScreen();
+	ssd1309_SetCursor(33,20);
+	ssd1309_WriteString(buf, Font_11x18, White);
+	ssd1309_UpdateScreen();
+
+	cube_array [4] = 1;
+	cube_array [13] = 3;
+	cube_array [22] = 6;
+	cube_array [31] = 5;
+	cube_array [40] = 4;
+	cube_array [49] = 2;
+
+	uint8_t color;
+	uint8_t pos_read = 0;
 
 	volatile uint8_t pos_array_read[48] =
 	{
@@ -334,19 +343,50 @@ void man_to_read_color_Handler(void)
 			49,52,47,54,51,48,53,46
 	};
 
-	char buf[] = "1";
+	move_servo(18);
+
+	for(uint8_t i=0; i<6; i++)
+	{
+		for(uint8_t k=0; k<8; k++)
+		{
+			move_servo(15);
+			color = get_color();
+			cube_array [pos_array_read[pos_read]-1] = color;
+			pos_read++;
+			move_servo(16);
+			move_motor(7, 125);
+		}
+
+		move_servo(18);
+		change_sides(i);
+	}
+
+	char buf_e[] = "err";
+	char buf_f[] = "correct";
 
 	ssd1309_Fill(Black);
 	ssd1309_UpdateScreen();
-	ssd1309_SetCursor(60,30);
-	ssd1309_WriteString(buf,Font_7x10, White);
+	ssd1309_SetCursor(33,20);
+
+	if(!check_colors())
+	{
+		ssd1309_WriteString(buf_e, Font_11x18, White);
+		/*
+		for(uint8_t i=0; i<54; i++)
+		{
+			cube_array[i] = 0;
+		}
+		*/
+	}
+	else
+	{
+		ssd1309_WriteString(buf_f, Font_11x18, White);
+	}
 	ssd1309_UpdateScreen();
 }
 
 void man_to_send_cube_Handler(void)
 {
-	set_bsp_03();
-
 	cube_message[0] = '$';
 	cube_message[1] = 'c';
 	cube_message[2] = 'u';
@@ -357,15 +397,10 @@ void man_to_send_cube_Handler(void)
 
 	for (int i=6; i<=59; i++)
 	{
-		cube_message[i] = bsp_cube_03[i-6];
+		cube_message[i] = cube_array[i-6];
 	}
 
-	char buf[] = "2";
-
 	ssd1309_Fill(Black);
-	ssd1309_UpdateScreen();
-	ssd1309_SetCursor(60,30);
-	ssd1309_WriteString(buf,Font_7x10, White);
 	ssd1309_UpdateScreen();
 
 	LPUART_WriteBlocking(LPUART2_PERIPHERAL, cube_message, sizeof(cube_message));

@@ -223,17 +223,6 @@ int main(void)
     BOARD_InitBootClocks();
     BOARD_InitBootPeripherals();
 
-    const ctimer_match_config_t CTIMER2_Match_0_config_manule = {
-      .matchValue = 2000000,
-      .enableCounterReset = true,
-      .enableCounterStop = true,
-      .outControl = kCTIMER_Output_NoAction,
-      .outPinInitState = false,
-      .enableInterrupt = true
-    };
-    CTIMER_SetupMatch(CTIMER2_PERIPHERAL, CTIMER2_MATCH_0_CHANNEL, &CTIMER2_Match_0_config_manule);
-
-
 	GPIO_PinWrite(BOARD_LED_RED_GPIO, 12, 1);
 	GPIO_PinWrite(BOARD_LED_GREEN_GPIO, 13, 1);
 	GPIO_PinWrite(BOARD_LED_BLUE_GPIO, 0, 1);
@@ -261,6 +250,8 @@ int main(void)
 	char buf_1[] = {'a','u','t','o'};
 	char buf_2[] = {'m','a','n'};
 
+	config_motor();
+
     ssd1309_Fill(Black);
     ssd1309_UpdateScreen();
 
@@ -271,9 +262,6 @@ int main(void)
 	ssd1309_WriteString(buf_2,Font_7x10, White);
 
 	ssd1309_UpdateScreen();
-	GPIO_PinWrite(GPIO2,LED_SWITCH_PIN, 1);
-
-	config_motor();
 
 	while(true)
 	{
