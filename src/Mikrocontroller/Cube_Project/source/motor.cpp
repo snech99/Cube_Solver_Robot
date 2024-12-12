@@ -11,6 +11,8 @@ void config_motor()
 {
 	uint8_t config_count = 0;
 
+	move_servo(18);
+
 	while( GPIO_PinRead(NULL_TRIGGER_GPIO, NULL_TRIGGER_PIN) == 0)
 	{
 		move_motor(1, 250);
@@ -66,7 +68,7 @@ void config_motor()
 
 			case 6:		GPIO_PinWrite(DIR_BLUE_GPIO, DIR_BLUE_PIN, 0);
 						GPIO_PinWrite(EN_BLUE_GPIO, EN_BLUE_PIN, 1);
-						config_count = 62;
+						config_count = 64;
 						break;
 			default:
 				break;
@@ -114,8 +116,6 @@ void config_motor()
 		GPIO_PinWrite(EN_BLUE_GPIO, EN_BLUE_PIN, 0);
 	}
 }
-
-
 
 void move_motor(uint8_t num, uint8_t flank)
 {
@@ -204,15 +204,14 @@ void move_servo(uint8_t per)
 	FLEXPWM0_PERIPHERAL->MCTRL |= PWM_MCTRL_LDOK(kPWM_Control_Module_1);
 	FLEXPWM0_PERIPHERAL->MCTRL |= PWM_MCTRL_RUN(kPWM_Control_Module_1);
 
-	pwm_servo_busy_flag = true;
-
-	uint32_t erg = 0;
-
-	CTIMER_StartTimer(CTIMER2);
-
-	while(pwm_servo_busy_flag)
+	for( uint8_t i=0; i<5; i++)
 	{
+		pwm_servo_busy_flag = true;
+		CTIMER_StartTimer(CTIMER2);
+		while(pwm_servo_busy_flag)
+		{
 
+		}
 	}
 }
 

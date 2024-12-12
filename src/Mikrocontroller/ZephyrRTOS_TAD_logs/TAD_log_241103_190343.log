@@ -1,6 +1,0 @@
-"Task Aware Debugger for GDB" version 11.9.1 (202403060848)
-Copyright 2016-2023 NXP
-==================================
-19:03:30.120 INFO: [ZephyrRTOS] .config file could not be read [H:\Git\Studium\NXP\Solving_Cube\Cube_Project\Debug\.config (Das System kann die angegebene Datei nicht finden)]
-19:03:30.120 INFO: [TadModel] DSF session ID 3 has started.
-19:03:43.920 INFO: [TadModel] DSF session ID 3 has ended.

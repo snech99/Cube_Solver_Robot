@@ -9,8 +9,6 @@ Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_240MS, TCS347
 State_t CURRENT_STATE = config;
 message msg;
 int move_array_final [200] = {};
-int *ptr_array_final = move_array_final;
-bool pwm_servo_busy_flag = false;
 
 char buf_name_white[] = "weiss";
 char buf_name_yellow[] = "gelb";
@@ -19,7 +17,7 @@ char buf_name_green[] = "gruen";
 char buf_name_orange[] = "orange";
 char buf_name_blue[] = "blau";
 
-char buf_back[] = "back";
+char buf_back[] = "zurueck";
 
 int cube_array[54] = {};
 
@@ -48,49 +46,59 @@ State_Transition transitionTable[] =
 
 void config_to_man_Handler(void)
 {
-	char buf[] = "man";
+	char buf_1[] = "1:Einlesen";
+	char buf_2[] = "2:Cube senden";
+	char buf_5[] = "5:Zuege ausfuehren";
+	char buf_6[] = "6:Random verdrehen";
+	char buf_7[] = "7:Beenden";
+
 
     ssd1309_Fill(Black);
     ssd1309_UpdateScreen();
-	ssd1309_SetCursor(33,30);
-	ssd1309_WriteString(buf,Font_7x10, White);
+
+	ssd1309_SetCursor(1,1);
+	ssd1309_WriteString(buf_1,Font_7x10, White);
+
+	ssd1309_SetCursor(1,13);
+	ssd1309_WriteString(buf_2,Font_7x10, White);
+
+	ssd1309_SetCursor(1,25);
+	ssd1309_WriteString(buf_5,Font_7x10, White);
+
+	ssd1309_SetCursor(1,37);
+	ssd1309_WriteString(buf_6,Font_7x10, White);
+
+	ssd1309_SetCursor(1,49);
+	ssd1309_WriteString(buf_7,Font_7x10, White);
+
 	ssd1309_UpdateScreen();
 }
 
 void auto_to_random_Handler(void)
 {
-	move_motor(1,250);
-	move_motor(7,250);
-	move_motor(2,250);
-	move_motor(8,250);
-	move_motor(3,250);
-	move_motor(9,250);
-	move_motor(4,250);
-	move_motor(10,250);
-	move_motor(5,250);
-	move_motor(11,250);
-	move_motor(6,250);
-	move_motor(12,250);
-
-	/*
-	uint8_t erg = get_rand_num();
-	char print_num[] =  {'0'};
-
-	itoa(erg,print_num, 10);
+	uint8_t erg = 0;
+	PWM_frequenz = 4000;
 
 	ssd1309_Fill(Black);
 	ssd1309_UpdateScreen();
 
-	ssd1309_SetCursor(52,20);
-	ssd1309_WriteString(print_num, Font_11x18, White);
-	ssd1309_SetCursor(85,51);
+	for(uint8_t i=0; i<20; i++)
+	{
+		erg = get_rand_num();
+		move_motor(erg, 250);
+	}
+
+	ssd1309_Fill(Black);
+	ssd1309_UpdateScreen();
+	ssd1309_SetCursor(70,51);
 	ssd1309_WriteString(buf_back,Font_7x10, White);
 	ssd1309_UpdateScreen();
-	*/
 }
 
 void auto_to_read_color_Handler(void)
 {
+	PWM_frequenz = 4000;
+
 	GPIO_PinWrite(GPIO2,LED_SWITCH_PIN, 1);
 
 	char buf[] = "scan";
@@ -149,10 +157,9 @@ void auto_to_read_color_Handler(void)
 
 
 	GPIO_PinWrite(GPIO2,LED_SWITCH_PIN, 0);
-	ssd1309_SetCursor(85,51);
+	ssd1309_SetCursor(70,51);
 	ssd1309_WriteString(buf_back,Font_7x10, White);
 	ssd1309_UpdateScreen();
-
 }
 
 void auto_to_solve_Handler(void)
@@ -166,10 +173,6 @@ void auto_to_solve_Handler(void)
 	char ms_print[] = "ms";
 	uint32_t erg = 0;
 	uint32_t time = 0;
-
-	//set_bsp_02();
-	//set_bsp_03();
-	//set_bsp_04();
 
 	for( uint8_t i=0; i<200; i++)
 	{
@@ -190,7 +193,7 @@ void auto_to_solve_Handler(void)
 		ssd1309_SetCursor(2,50);
 		ssd1309_WriteString(buf_2,Font_7x10, White);
 
-		ssd1309_SetCursor(85,51);
+		ssd1309_SetCursor(70,51);
 		ssd1309_WriteString(buf_back,Font_7x10, White);
 
 		ssd1309_UpdateScreen();
@@ -224,7 +227,7 @@ void auto_to_solve_Handler(void)
 		ssd1309_SetCursor(2,50);
 		ssd1309_WriteString(buf_2,Font_7x10, White);
 
-		ssd1309_SetCursor(85,51);
+		ssd1309_SetCursor(70,51);
 		ssd1309_WriteString(buf_back,Font_7x10, White);
 
 		ssd1309_UpdateScreen();
@@ -233,7 +236,7 @@ void auto_to_solve_Handler(void)
 
 void solve_to_fast_Handler(void)
 {
-	PWM_frequenz = 8000;
+	PWM_frequenz = 4000;
 
 	uint16_t pos = 0;
 
@@ -245,7 +248,7 @@ void solve_to_fast_Handler(void)
 
 	ssd1309_Fill(Black);
 	ssd1309_UpdateScreen();
-	ssd1309_SetCursor(85,51);
+	ssd1309_SetCursor(70,51);
 	ssd1309_WriteString(buf_back,Font_7x10, White);
 	ssd1309_UpdateScreen();
 }
@@ -254,7 +257,7 @@ void solve_to_slow_Handler(void)
 {
 	uint16_t pos = 0;
 
-	PWM_frequenz = 2000;
+	PWM_frequenz = 1000;
 
 	while(move_array_final[pos] != 0)
 	{
@@ -264,7 +267,7 @@ void solve_to_slow_Handler(void)
 
 	ssd1309_Fill(Black);
 	ssd1309_UpdateScreen();
-	ssd1309_SetCursor(85,51);
+	ssd1309_SetCursor(70, 51);
 	ssd1309_WriteString(buf_back,Font_7x10, White);
 	ssd1309_UpdateScreen();
 }
@@ -294,21 +297,21 @@ void man_to_random_Handler(void)
 {
 	uint8_t erg;
 
-	/*
+	char buf[] = "random";
+
+	ssd1309_Fill(Black);
+	ssd1309_UpdateScreen();
+	ssd1309_SetCursor(33,20);
+	ssd1309_WriteString(buf, Font_11x18, White);
+	ssd1309_UpdateScreen();
+
 	for(uint8_t i=0; i<20; i++)
 	{
 		erg = get_rand_num();
 		move_motor(erg, 250);
 	}
-	*/
 
-	char buf[] = "6";
-
-	ssd1309_Fill(Black);
-	ssd1309_UpdateScreen();
-	ssd1309_SetCursor(60,30);
-	ssd1309_WriteString(buf,Font_7x10, White);
-	ssd1309_UpdateScreen();
+	config_to_man_Handler();
 }
 
 void man_to_read_color_Handler(void)
@@ -400,50 +403,65 @@ void man_to_send_cube_Handler(void)
 		cube_message[i] = cube_array[i-6];
 	}
 
-	ssd1309_Fill(Black);
-	ssd1309_UpdateScreen();
+	config_to_man_Handler();
 
 	LPUART_WriteBlocking(LPUART2_PERIPHERAL, cube_message, sizeof(cube_message));
 }
 
 void man_to_solve_Handler(void)
 {
-	uint16_t erg = 0;
+	char print_moves_num [3] = {};
+	char print_time_num [3] = {};
+	char s_print[] = "sec";
+	char moves_in[] = "moves in ";
+	uint32_t erg = 0;
+	uint32_t time = 0;
 
-	char buf[] = "5";
+	char buf[] = "solve";
 
 	ssd1309_Fill(Black);
 	ssd1309_UpdateScreen();
 	ssd1309_SetCursor(60,30);
 	ssd1309_WriteString(buf,Font_7x10, White);
 	ssd1309_UpdateScreen();
-/*
-	for(uint8_t i=0; i<245; i++)
+
+ 	tick_start = tick_count;
+
+	while(msg.m_data[0] != 0)
 	{
-		if(msg.data != 0)
-		{
-			move_motor(msg.data[i]);
-			erg++;
-		}
-		else
-		{
-			break;
-		}
+		move_motor(msg.m_data[erg], 250);
+		erg++;
 	}
+
+	tick_end = tick_count;
+	time = calc_time_ms();
 
 	for (int i=0; i<54; i++)
 	{
 		cube_array[i] = 0;
 	}
 
-	char buf[] = {(char)erg}
+	time = time/1000;
+
+	itoa(erg,print_moves_num, 10);
+	itoa(time,print_time_num, 10);
 
 	ssd1309_Fill(Black);
 	ssd1309_UpdateScreen();
-	ssd1309_SetCursor(60,30);
-	ssd1309_WriteString(buf,Font_7x10, White);
+
+	ssd1309_SetCursor(1,30);
+	ssd1309_WriteString(print_moves_num, Font_7x10, White);
+
+	ssd1309_SetCursor(25,30);
+	ssd1309_WriteString(moves_in, Font_7x10, White);
+
+	ssd1309_SetCursor(100,30);
+	ssd1309_WriteString(print_time_num, Font_7x10, White);
+
+	ssd1309_SetCursor(140,20);
+	ssd1309_WriteString(s_print, Font_7x10, White);
+
 	ssd1309_UpdateScreen();
-*/
 }
 
 

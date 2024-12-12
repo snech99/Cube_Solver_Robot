@@ -10,7 +10,7 @@
 color_c detect_color(uint16_t red, uint16_t green, uint16_t blue, uint16_t clear)
 {
 	int32_t small = green - blue - red;
-	if(blue > 1200)
+	if(blue > 1600)
 	{
 		return c_white;
 	}
@@ -20,17 +20,17 @@ color_c detect_color(uint16_t red, uint16_t green, uint16_t blue, uint16_t clear
 		return c_green;
 	}
 
-	if(red < 350)
+	if(red < 500)
 	{
 		return c_blue;
 	}
 
-	if(green > 1000)
+	if(green > 1500)
 	{
 		return c_yellow;
 	}
 
-	if(green > 400)
+	if(red > 1400)
 	{
 		return c_orange;
 	}
@@ -56,6 +56,7 @@ uint8_t get_color()
 	{
 
 	}
+
 	return (uint8_t)detected_color;
 }
 

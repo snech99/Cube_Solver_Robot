@@ -9,6 +9,7 @@
 
 uint8_t rx_buffer[BUFFER_MAX] = {};
 uint8_t rx_buffer_index = 0;
+
 bool flag_hit_1 = false;
 bool flag_hit_2 = false;
 bool SW_hit_flag = false;
@@ -18,22 +19,24 @@ bool SW_flag_BL = false;
 bool SW_flag_BR = false;
 bool color_busy_flag = true;
 bool pwm_busy_flag = false;
+bool pwm_servo_busy_flag = false;
 bool NULL_flag = false;
+
 uint32_t tick_count = 0;
 uint32_t tick_start = 0;
 uint32_t tick_end = 0;
 
 volatile uint32_t pwm_ms_count = 0;
 volatile int32_t PWM_flanke_count = 250;
-volatile uint32_t PWM_frequenz = 6000; // 1000/rev !!! 8000
+volatile uint32_t PWM_frequenz = 4000; // 1000/rev !!! 8000
 
 //8kHz -> unter 62.5ms
 
 void TIMER1_CALLBACK_RAMPE(uint32_t flags)
 {
-	if (pwm_ms_count < 49)	//29
+	if (pwm_ms_count < 99)	//29
 	{
-		float add_frequenz = (float)PWM_frequenz/50;
+		float add_frequenz = (float)PWM_frequenz/100;
 		uint32_t new_frequenz = (uint32_t) add_frequenz + (pwm_ms_count*add_frequenz);
 
 		if(new_frequenz == 0)
@@ -65,6 +68,27 @@ void TIMER1_CALLBACK_RAMPE(uint32_t flags)
 
 void TIMER0_ISR_RESET_CALLBACK(uint32_t flags)
 {
+
+	if(GPIO_PinRead(GPIO2, TASTER_T_L) == 0)
+	{
+		SW_flag_TL = true;
+	}
+
+	if(GPIO_PinRead(GPIO2, TASTER_T_R) == 0)
+	{
+		SW_flag_TR = true;
+	}
+
+	if(GPIO_PinRead(GPIO2, TASTER_B_L) == 0)
+	{
+		SW_flag_BL = true;
+	}
+
+	if(GPIO_PinRead(GPIO2, TASTER_B_R) == 0)
+	{
+		SW_flag_BR = true;
+	}
+
 	GPIO_GpioClearInterruptFlags(GPIO2, 1<<TASTER_T_L);
 	GPIO_GpioClearInterruptFlags(GPIO2, 1<<TASTER_T_R);
 	GPIO_GpioClearInterruptFlags(GPIO2, 1<<TASTER_B_L);
@@ -150,31 +174,36 @@ extern "C" void GPIO2_IRQHANDLER(void)
 
 	if((hit_flag>>TASTER_T_L) == 1)
 	{
-		SW_flag_TL = true;
+		DisableIRQ(GPIO2_IRQN);
+		CTIMER_StartTimer(CTIMER0);
+		//SW_flag_TL = true;
 	}
 
 	if((hit_flag>>TASTER_T_R) == 1)
 	{
-		SW_flag_TR = true;
+		DisableIRQ(GPIO2_IRQN);
+		CTIMER_StartTimer(CTIMER0);
+		//SW_flag_TR = true;
 	}
 
 	if((hit_flag>>TASTER_B_L) == 1)
 	{
-		SW_flag_BL = true;
+		DisableIRQ(GPIO2_IRQN);
+		CTIMER_StartTimer(CTIMER0);
+		//SW_flag_BL = true;
 	}
 
 	if((hit_flag>>TASTER_B_R) == 1)
 	{
-		SW_flag_BR = true;
+		DisableIRQ(GPIO2_IRQN);
+		CTIMER_StartTimer(CTIMER0);
+		//SW_flag_BR = true;
 	}
 
 	GPIO_GpioClearInterruptFlags(GPIO2, 1<<TASTER_T_L);
 	GPIO_GpioClearInterruptFlags(GPIO2, 1<<TASTER_T_R);
 	GPIO_GpioClearInterruptFlags(GPIO2, 1<<TASTER_B_L);
 	GPIO_GpioClearInterruptFlags(GPIO2, 1<<TASTER_B_R);
-
-	DisableIRQ(GPIO2_IRQN);
-	CTIMER_StartTimer(CTIMER0);
 }
 
 /* GPIO3_IRQn interrupt handler */
@@ -192,7 +221,7 @@ extern "C" void GPIO3_IRQHANDLER(void)
 uint8_t get_rand_num()
 {
     srand(SysTick->VAL%65535);
-    return (rand()%11 + 1);
+    return (rand()%12 + 1);
 }
 
 extern "C" void SysTick_Handler(void)
@@ -223,44 +252,32 @@ int main(void)
     BOARD_InitBootClocks();
     BOARD_InitBootPeripherals();
 
-	GPIO_PinWrite(BOARD_LED_RED_GPIO, 12, 1);
-	GPIO_PinWrite(BOARD_LED_GREEN_GPIO, 13, 1);
-	GPIO_PinWrite(BOARD_LED_BLUE_GPIO, 0, 1);
+    SysTick_Config(SystemCoreClock/1000);
 
     ssd1309_Init();
 
-    SysTick_Config(SystemCoreClock/1000);
-
     if (!tcs.init())
     {
-    	GPIO_PinWrite(BOARD_LED_GREEN_GPIO, 13, 1);
-    	GPIO_PinWrite(BOARD_LED_BLUE_GPIO, 0, 1);
-    	GPIO_PinWrite(BOARD_LED_RED_GPIO, 12, 0);
+    	//error
     }
     else
     {
-    	GPIO_PinWrite(BOARD_LED_GREEN_GPIO, 13, 0);
-    	GPIO_PinWrite(BOARD_LED_BLUE_GPIO, 0, 1);
-    	GPIO_PinWrite(BOARD_LED_RED_GPIO, 12, 1);
+    	//correct
     }
 
     tcs.write8(TCS34725_PERS, TCS34725_PERS_NONE);
     tcs.setInterrupt(true);
 
-	char buf_1[] = {'a','u','t','o'};
-	char buf_2[] = {'m','a','n'};
-
 	config_motor();
 
+	char buf_1[] = "Automatik";
+	char buf_2[] = "Extern";
     ssd1309_Fill(Black);
     ssd1309_UpdateScreen();
-
 	ssd1309_SetCursor(2,3);
 	ssd1309_WriteString(buf_1,Font_7x10, White);
-
 	ssd1309_SetCursor(2,50);
 	ssd1309_WriteString(buf_2,Font_7x10, White);
-
 	ssd1309_UpdateScreen();
 
 	while(true)
