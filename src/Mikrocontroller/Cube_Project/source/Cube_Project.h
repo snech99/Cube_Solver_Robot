@@ -93,6 +93,8 @@ extern volatile uint8_t pos_array_read[48];
 extern volatile uint32_t PWM_frequenz;
 extern volatile uint32_t pwm_ms_count;
 extern volatile int32_t PWM_flanke_count;
+extern volatile uint32_t PWM_ramp_time;
+
 extern uint8_t rx_buffer[BUFFER_MAX];
 extern uint8_t rx_buffer_index;
 extern bool flag_hit_1;

@@ -22,10 +22,10 @@ void config_motor()
 		move_motor(5, 250);
 		move_motor(6, 250);
 	}
-	PWM_flanke_count = 5;
 
+	PWM_flanke_count = 5;
 	PWM_SetupPwm(FLEXPWM0_PERIPHERAL, FLEXPWM0_ALL_PWM, FLEXPWM0_ALL_PWM_pwm_function_config, 1U, kPWM_SignedCenterAligned,
-						700, FLEXPWM0_ALL_PWM_SM_CLK_SOURCE_FREQ_HZ);
+						500, FLEXPWM0_ALL_PWM_SM_CLK_SOURCE_FREQ_HZ);
 
 	FLEXPWM0_PERIPHERAL->MCTRL |= PWM_MCTRL_LDOK(kPWM_Control_Module_0);
 	FLEXPWM0_PERIPHERAL->MCTRL |= PWM_MCTRL_RUN(kPWM_Control_Module_0);
@@ -68,7 +68,7 @@ void config_motor()
 
 			case 6:		GPIO_PinWrite(DIR_BLUE_GPIO, DIR_BLUE_PIN, 0);
 						GPIO_PinWrite(EN_BLUE_GPIO, EN_BLUE_PIN, 1);
-						config_count = 64;
+						config_count = 63;
 						break;
 			default:
 				break;
@@ -77,7 +77,7 @@ void config_motor()
 		PWM_flanke_count = 2000;
 
 		PWM_SetupPwm(FLEXPWM0_PERIPHERAL, FLEXPWM0_ALL_PWM, FLEXPWM0_ALL_PWM_pwm_function_config, 1U, kPWM_SignedCenterAligned,
-							500, FLEXPWM0_ALL_PWM_SM_CLK_SOURCE_FREQ_HZ);
+							1000, FLEXPWM0_ALL_PWM_SM_CLK_SOURCE_FREQ_HZ);
 
 		FLEXPWM0_PERIPHERAL->MCTRL |= PWM_MCTRL_LDOK(kPWM_Control_Module_0);
 		FLEXPWM0_PERIPHERAL->MCTRL |= PWM_MCTRL_RUN(kPWM_Control_Module_0);
@@ -94,7 +94,7 @@ void config_motor()
 		PWM_flanke_count = config_count;
 
 		PWM_SetupPwm(FLEXPWM0_PERIPHERAL, FLEXPWM0_ALL_PWM, FLEXPWM0_ALL_PWM_pwm_function_config, 1U, kPWM_SignedCenterAligned,
-									500, FLEXPWM0_ALL_PWM_SM_CLK_SOURCE_FREQ_HZ);
+									1000, FLEXPWM0_ALL_PWM_SM_CLK_SOURCE_FREQ_HZ);
 
 		FLEXPWM0_PERIPHERAL->MCTRL |= PWM_MCTRL_LDOK(kPWM_Control_Module_0);
 		FLEXPWM0_PERIPHERAL->MCTRL |= PWM_MCTRL_RUN(kPWM_Control_Module_0);
@@ -204,7 +204,7 @@ void move_servo(uint8_t per)
 	FLEXPWM0_PERIPHERAL->MCTRL |= PWM_MCTRL_LDOK(kPWM_Control_Module_1);
 	FLEXPWM0_PERIPHERAL->MCTRL |= PWM_MCTRL_RUN(kPWM_Control_Module_1);
 
-	for( uint8_t i=0; i<5; i++)
+	for( uint8_t i=0; i<3; i++)
 	{
 		pwm_servo_busy_flag = true;
 		CTIMER_StartTimer(CTIMER2);

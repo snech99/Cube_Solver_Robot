@@ -29,14 +29,16 @@ uint32_t tick_end = 0;
 volatile uint32_t pwm_ms_count = 0;
 volatile int32_t PWM_flanke_count = 250;
 volatile uint32_t PWM_frequenz = 4000; // 1000/rev !!! 8000
+volatile uint32_t PWM_ramp_time = 100; // 1000/rev !!! 8000
+
 
 //8kHz -> unter 62.5ms
 
 void TIMER1_CALLBACK_RAMPE(uint32_t flags)
 {
-	if (pwm_ms_count < 99)	//29
+	if (pwm_ms_count < (PWM_ramp_time-1))
 	{
-		float add_frequenz = (float)PWM_frequenz/100;
+		float add_frequenz = (float)PWM_frequenz/PWM_ramp_time;
 		uint32_t new_frequenz = (uint32_t) add_frequenz + (pwm_ms_count*add_frequenz);
 
 		if(new_frequenz == 0)
