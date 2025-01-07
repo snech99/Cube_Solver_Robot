@@ -23,12 +23,12 @@ int main(int argc, char *argv[])
 
   char buf_input[MAX_INPUT] = {};
   int cube_buf [54] = {};
-  int erg_buf[245] = {};
+  int erg_buf[1024] = {};
   char buf_read[] = {'$','r','e','a','d','_','c','o','l','o','r','!','%'};
   char buf_send[] = {'$','s','e','n','d','_','c','u','b','e','!','%'};
   char buf_rand[] = {'$','r','a','n','d','o','m','!','%'};
 
-  char buf_solve[256] = {};
+  char buf_solve[1033] = {};
 
   buf_solve[0] = '$';
   buf_solve[1] = 's';
@@ -37,22 +37,14 @@ int main(int argc, char *argv[])
   buf_solve[4] = 'v';
   buf_solve[5] = 'e';
   buf_solve[6] = '!';
-  buf_solve[255] = '%';
-
-  buf_solve[7] = 1;
-  buf_solve[8] = 2;
-  buf_solve[9] = 3;
-  buf_solve[10] = 4;
-  buf_solve[11] = 5;
-  buf_solve[12] = 6;
-  buf_solve[13] = 7;
-  buf_solve[14] = 8;
-  buf_solve[15] = 9;
-  buf_solve[16] = 10;
+  buf_solve[1031] = 0;
+  buf_solve[1032] = '%';
 
   char read_buf[61] = {};
 
-  printf("Cube lesen: 1\nGelesenen Cube senden: 2\nEmpfangenen Cube anzeigen: 3\nLoesung intern berechnen: 4\nLoesung senden und ausfuehren: 5\nZufaellig verdrehen: 6\nBeenden: 7\n");
+  int pos = 0;
+
+  printf("Cube einlesen: 1\nGelesenen Cube empfangen: 2\nEmpfangenen Cube anzeigen: 3\nPython-Berechnung: 4\nLoesung senden und ausfuehren: 5\nZufaellig verdrehen: 6\nBeenden: 7\n");
 
   while(1)
   {
@@ -65,13 +57,13 @@ int main(int argc, char *argv[])
 
       case '2':   write(serial_port, buf_send, sizeof(buf_send));
                   read(serial_port, read_buf, sizeof(read_buf));   
-
+              
                   for(int i=0; i<61; i++)
                   {
-                      printf("%d ", (int)read_buf[i]);
+                      printf("%d,", (int)read_buf[i]);
                   } 
                   printf("\n");
-
+                  
                   for(int i=0; i<54; i++)
                   {
                     cube_buf[i] = (int)read_buf[i+6];
@@ -85,21 +77,35 @@ int main(int argc, char *argv[])
                       break;
                   }
 
-                  for(int i=0; i<54; i++)
-                  {
-                    printf("%d ",cube_buf[i]);
-                  }
                   printf("\n");
+                  for(int k=0; k<6; k++)
+                  {
+                    for(int l=0; l<3; l++)
+                    {
+                      for(int j=0; j<3; j++)
+                      {
+                        printf("%d",cube_buf[pos]);
+                        pos++;
+                      }
+                      printf("\n");
+                    }
+                    printf("\n");
+                  }
                   break;
 
-      case '4':   fork_and_send(cube_buf, erg_buf, script_name); 
+      case '4':   for(int i=0; i<1024; i++)
+                  {
+                    erg_buf[i] = 0;
+                  }
 
-          	      for (int i = 0; i < 245; i++) 
+                  fork_and_send(cube_buf, erg_buf, script_name); 
+
+          	      for (int i = 0; i < 1024; i++) 
 		              {
         	          printf("%d ", erg_buf[i]);
                     buf_solve[i+7] = erg_buf[i];
     	            }  
-                   
+
    		            printf("\n"); 
                   break;
 
