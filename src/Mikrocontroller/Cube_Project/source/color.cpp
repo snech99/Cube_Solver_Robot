@@ -10,7 +10,7 @@
 color_c detect_color(uint16_t red, uint16_t green, uint16_t blue, uint16_t clear)
 {
 	int32_t small = green - blue - red;
-	if(blue > 1600)
+	if(blue > 1300)
 	{
 		return c_white;
 	}
@@ -20,17 +20,17 @@ color_c detect_color(uint16_t red, uint16_t green, uint16_t blue, uint16_t clear
 		return c_green;
 	}
 
-	if(red < 500)
+	if(red < 375)
 	{
 		return c_blue;
 	}
 
-	if(green > 1500)
+	if(green > 1100)
 	{
 		return c_yellow;
 	}
 
-	if(red > 1400)
+	if(red > 1100)
 	{
 		return c_orange;
 	}
@@ -44,11 +44,30 @@ uint8_t get_color()
     color_c detected_color;
 	color_busy_flag = true;
 
+	char buf_5[6] = {};
+	char buf_6[6] = {};
+	char buf_7[6] = {};
+
 	tcs.write8(TCS34725_PERS, TCS34725_PERS_NONE);
 	tcs.setInterrupt(true);
 
 	tcs.getRawData(&r_raw, &g_raw, &b_raw, &c_raw);
 	detected_color = detect_color(r_raw, g_raw, b_raw, c_raw);
+
+	/*
+	itoa(r_raw,buf_5,10);
+	itoa(g_raw,buf_6,10);
+	itoa(b_raw,buf_7,10);
+
+	ssd1309_SetCursor(3,3);
+	ssd1309_WriteString(buf_5,Font_7x10, White);
+
+	ssd1309_SetCursor(3,20);
+	ssd1309_WriteString(buf_6,Font_7x10, White);
+
+	ssd1309_SetCursor(3,37);
+	ssd1309_WriteString(buf_7,Font_7x10, White);
+	*/
 
 	tcs.clearInterrupt();
 
@@ -56,6 +75,8 @@ uint8_t get_color()
 	{
 
 	}
+
+    //ssd1309_UpdateScreen();
 
 	return (uint8_t)detected_color;
 }

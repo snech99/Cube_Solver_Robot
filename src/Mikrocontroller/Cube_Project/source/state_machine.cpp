@@ -122,7 +122,6 @@ void auto_to_read_color_Handler(void)
 	char buf_e[] = "error";
 	char buf_f[] = "correct";
 
-
     ssd1309_Fill(Black);
     ssd1309_UpdateScreen();
 	ssd1309_SetCursor(44,20);
@@ -153,7 +152,7 @@ void auto_to_read_color_Handler(void)
 	{
 		move_servo(16);
 
-		for( uint8_t i=0; i<2; i++)
+		for( uint8_t i=0; i<15; i++)
 		{
 			pwm_servo_busy_flag = true;
 			CTIMER_StartTimer(CTIMER2);
@@ -163,18 +162,27 @@ void auto_to_read_color_Handler(void)
 			}
 		}
 
-		PWM_ramp_time = 60;
+		PWM_ramp_time = RAMP_SHORT;
 		for(uint8_t k=0; k<8; k++)
 		{
 			move_servo(15);
 			color = get_color();
 			cube_array [pos_array_read[pos_read]] = color;
 			pos_read++;
+
+			/*
+			while(!SW_flag_BL)
+			{
+
+			}
+			SW_flag_BL = false;
+			*/
+
 			move_servo(16);
-			move_motor(1, 125);	//125
+			move_motor(1, 125);
 		}
 
-		PWM_ramp_time = 100;
+		PWM_ramp_time = RAMP_LONG;
 		move_servo(18);
 		change_sides(i);
 	}
@@ -228,10 +236,10 @@ void auto_to_solve_Handler(void)
 	}
 	else
 	{
-		move_count = do_magic(cube_array, move_array_final);
-
 		ssd1309_Fill(Black);
 		ssd1309_UpdateScreen();
+
+		move_count = do_magic(cube_array, move_array_final);
 
 		ssd1309_SetCursor(2,3);
 		ssd1309_WriteString(buf_1,Font_7x10, White);
@@ -339,7 +347,7 @@ void solve_to_slow_Handler(void)
 	{
 		move_motor(move_array_final[pos], 250);
 
-		for(uint8_t i=0; i<3; i++)
+		for(uint8_t i=0; i<10; i++)
 		{
 			pwm_busy_flag = true;
 			CTIMER_StartTimer(CTIMER2);
@@ -352,7 +360,7 @@ void solve_to_slow_Handler(void)
 		pos++;
 	}
 
-	PWM_frequenz = 4000;
+	PWM_frequenz = PWM_FREQUENZ;
 
 	tick_end = tick_count;
 	time = calc_time_ms();
@@ -492,7 +500,7 @@ void man_to_read_color_Handler(void)
 	{
 		move_servo(16);
 
-		for( uint8_t i=0; i<2; i++)
+		for( uint8_t i=0; i<15; i++)
 		{
 			pwm_servo_busy_flag = true;
 			CTIMER_StartTimer(CTIMER2);
@@ -502,7 +510,7 @@ void man_to_read_color_Handler(void)
 			}
 		}
 
-		PWM_ramp_time = 60;
+		PWM_ramp_time = RAMP_SHORT;
 		for(uint8_t k=0; k<8; k++)
 		{
 			move_servo(15);
@@ -512,7 +520,7 @@ void man_to_read_color_Handler(void)
 			move_servo(16);
 			move_motor(1, 125);
 		}
-		PWM_ramp_time = 100;
+		PWM_ramp_time =RAMP_LONG;
 
 		move_servo(18);
 		change_sides(i);
@@ -528,12 +536,10 @@ void man_to_read_color_Handler(void)
 	if(!check_colors())
 	{
 		ssd1309_WriteString(buf_e, Font_11x18, White);
-		/*
 		for(uint8_t i=0; i<54; i++)
 		{
 			cube_array[i] = 0;
 		}
-		*/
 	}
 	else
 	{

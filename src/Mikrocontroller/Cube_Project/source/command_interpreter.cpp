@@ -1,20 +1,20 @@
 #include "Cube_Project.h"
 
 bool check_blue(uint8_t*);
-bool check_read_color(uint8_t*);
-bool check_random(uint8_t*);
-bool check_solve(uint8_t*);
-bool check_send_cube (uint8_t *);
-bool check_moves (uint8_t *);
+bool check_read_color(uint16_t*);
+bool check_random(uint16_t*);
+bool check_solve(uint16_t*);
+bool check_send_cube (uint16_t *);
+bool check_moves (uint16_t *);
 
 message get_command_and_data (uint8_t *read_array)
 {
 	message msg;
 
-    uint8_t string_pos_command = 0;
-    uint8_t string_pos_data = 0;
-    uint8_t string_pos_rx = 1;
-    uint8_t command_string[32] = {};
+    uint16_t string_pos_command = 0;
+    uint16_t string_pos_data = 0;
+    uint16_t string_pos_rx = 1;
+    uint16_t command_string[32] = {};
 
     while(read_array[string_pos_rx] != '!')
     {
@@ -73,7 +73,7 @@ message get_command_and_data (uint8_t *read_array)
     return msg;
 }
 
-bool check_read_color(uint8_t* array)
+bool check_read_color(uint16_t* array)
 {
 	uint8_t test_read[10] = {'r','e','a','d','_','c','o','l','o','r'};
 
@@ -87,7 +87,7 @@ bool check_read_color(uint8_t* array)
 	return true;
 }
 
-bool check_random(uint8_t* array)
+bool check_random(uint16_t* array)
 {
 	uint8_t test_read[6] = {'r','a','n','d','o','m'};
 
@@ -101,7 +101,7 @@ bool check_random(uint8_t* array)
 	return true;
 }
 
-bool check_solve(uint8_t* array)
+bool check_solve(uint16_t* array)
 {
 	uint8_t test_read[5] = {'s','o','l','v','e'};
 
@@ -115,7 +115,7 @@ bool check_solve(uint8_t* array)
 	return true;
 }
 
-bool check_send_cube(uint8_t* array)
+bool check_send_cube(uint16_t* array)
 {
 	uint8_t test_read[9] = {'s','e','n','d','_','c','u','b','e'};
 
@@ -129,7 +129,7 @@ bool check_send_cube(uint8_t* array)
 	return true;
 }
 
-bool check_moves(uint8_t* array)
+bool check_moves(uint16_t* array)
 {
 	uint8_t test_read[5] = {'m','o','v','e','s'};
 

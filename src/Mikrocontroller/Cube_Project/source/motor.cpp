@@ -204,7 +204,7 @@ void move_servo(uint8_t per)
 	FLEXPWM0_PERIPHERAL->MCTRL |= PWM_MCTRL_LDOK(kPWM_Control_Module_1);
 	FLEXPWM0_PERIPHERAL->MCTRL |= PWM_MCTRL_RUN(kPWM_Control_Module_1);
 
-	for( uint8_t i=0; i<3; i++)
+	for( uint8_t i=0; i<25; i++)
 	{
 		pwm_servo_busy_flag = true;
 		CTIMER_StartTimer(CTIMER2);

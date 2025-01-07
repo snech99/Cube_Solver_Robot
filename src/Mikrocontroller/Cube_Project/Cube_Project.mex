@@ -1487,7 +1487,7 @@
                            <struct name="0">
                               <setting name="matchChannelPrefixId" value="Match_0"/>
                               <setting name="matchChannel" value="kCTIMER_Match_0"/>
-                              <setting name="matchValueStr" value="150 ms"/>
+                              <setting name="matchValueStr" value="25 ms"/>
                               <setting name="enableCounterReset" value="true"/>
                               <setting name="enableCounterStop" value="true"/>
                               <setting name="outControl" value="kCTIMER_Output_NoAction"/>

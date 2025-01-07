@@ -8,7 +8,7 @@
 #include "state_machine.h"
 
 uint8_t rx_buffer[BUFFER_MAX] = {};
-uint8_t rx_buffer_index = 0;
+uint16_t rx_buffer_index = 0;
 
 bool flag_hit_1 = false;
 bool flag_hit_2 = false;
@@ -28,12 +28,10 @@ uint32_t tick_end = 0;
 
 volatile uint32_t pwm_ms_count = 0;
 volatile int32_t PWM_flanke_count = 250;
-volatile uint32_t PWM_frequenz = 4000; // 1000/rev !!! 8000
-volatile uint32_t PWM_ramp_time = 100; // 1000/rev !!! 8000
-
+volatile uint32_t PWM_frequenz = PWM_FREQUENZ;
+volatile uint32_t PWM_ramp_time = RAMP_LONG;
 
 //8kHz -> unter 62.5ms
-
 void TIMER1_CALLBACK_RAMPE(uint32_t flags)
 {
 	if (pwm_ms_count < (PWM_ramp_time-1))

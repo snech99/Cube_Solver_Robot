@@ -14,7 +14,11 @@
 #ifndef CUBE_PROJECT_H_
 #define CUBE_PROJECT_H_
 
-#define BUFFER_MAX 256
+#define PWM_FREQUENZ 10000
+#define RAMP_LONG 40
+#define RAMP_SHORT 20
+
+#define BUFFER_MAX 1033
 #define SW_3_PIN BOARD_INITSW_SW_3_PIN
 #define TASTER_T_L BOARD_INITSW_TASTER_T_L_PIN
 #define TASTER_T_R BOARD_INITSW_TASTER_T_R_PIN
@@ -86,7 +90,7 @@ enum color_c
 struct message
 {
 	command m_command;
-	uint8_t m_data[BUFFER_MAX] = {};
+	uint8_t m_data[1024] = {};
 };
 
 extern volatile uint8_t pos_array_read[48];
@@ -96,7 +100,7 @@ extern volatile int32_t PWM_flanke_count;
 extern volatile uint32_t PWM_ramp_time;
 
 extern uint8_t rx_buffer[BUFFER_MAX];
-extern uint8_t rx_buffer_index;
+extern uint16_t rx_buffer_index;
 extern bool flag_hit_1;
 extern bool flag_hit_2 ;
 extern bool SW_hit_flag;
