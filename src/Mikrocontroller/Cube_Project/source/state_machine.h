@@ -8,6 +8,7 @@ typedef enum
 	random_auto,
 	read_color_auto,
 	solve_auto,
+	change_cube,
 	fast,
 	slow,
 	idle_man,
@@ -38,6 +39,7 @@ typedef struct {
 void auto_to_random_Handler(void);
 void auto_to_read_color_Handler(void);
 void auto_to_solve_Handler(void);
+void auto_to_change_Handler(void);
 void solve_to_fast_Handler(void);
 void solve_to_slow_Handler(void);
 void back_to_auto(void);

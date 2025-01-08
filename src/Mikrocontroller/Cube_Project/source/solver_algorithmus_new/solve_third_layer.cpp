@@ -1,6 +1,6 @@
 /*
 *	Rubiks´s Cube solver by Gerrit Hinrichs 
-*   06.2024
+*   11.2024
 *
 * 	solving the third and last layer
 */
@@ -424,13 +424,18 @@ void Game::L_move (color col)
     }
 }
 
-//move to change a stone in the third laye
+//move to change a stone in the third layer
 void Game::align_rainbow_middle()
 {
     int num = 0;
     color mid = red;
     color stone_front = get_color(red, 2);
     color stone_back  = get_color(orange, 2);
+
+    if(middle_rainbow_done())
+    {
+        return;
+    }
 
     switch (stone_back)
     {
@@ -506,13 +511,29 @@ void Game::align_rainbow_middle()
     rotate_Kantensteine(mid);
 }  
 
+//Checks for DONE
+bool Game::middle_rainbow_done()
+{
+    color mid = red;
+
+    for(int i=3; i<7; i++)
+    {
+        mid = (color) i;
+        if(!check_stone(mid, 2))
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
 //last algorithm until the cube is solved
 void Game::finish_cube()
 {
     color mid = red; 
     int check = 0;
 
-    while(!this->c.allSidesFixed())
+    while(!c.allSidesFixed())
     { 
         for(int i=3; i<7; i++)
         {
@@ -534,7 +555,7 @@ void Game::finish_cube()
                 }
             }
 
-            if (this->c.allSidesFixed())
+            if (c.allSidesFixed())
             {
                 return;
             }

@@ -32,6 +32,7 @@ State_Transition transitionTable[] =
 		{idle_auto, Taster_T_L, random_auto, auto_to_random_Handler},
 		{idle_auto, Taster_B_L, read_color_auto, auto_to_read_color_Handler},
 		{idle_auto, Taster_T_R, solve_auto, auto_to_solve_Handler},
+		{idle_auto, Taster_B_R, change_cube, auto_to_change_Handler},
 		{solve_auto, Taster_B_R, idle_auto, back_to_auto},
 		{solve_auto, Taster_T_L, fast, solve_to_fast_Handler},
 		{solve_auto, Taster_B_L, slow, solve_to_slow_Handler},
@@ -39,6 +40,7 @@ State_Transition transitionTable[] =
 		{read_color_auto, Taster_B_R, idle_auto, back_to_auto},
 		{fast, Taster_B_R, idle_auto, back_to_auto},
 		{slow, Taster_B_R, idle_auto, back_to_auto},
+		{change_cube, Taster_B_R, idle_auto, back_to_auto},
 
 		{idle_man, msg_random, idle_man, man_to_random_Handler},
 		{idle_man, msg_read_color, idle_man, man_to_read_color_Handler},
@@ -119,8 +121,8 @@ void auto_to_read_color_Handler(void)
 	GPIO_PinWrite(GPIO2,LED_SWITCH_PIN, 1);
 
 	char buf[] = "scan";
-	char buf_e[] = "error";
-	char buf_f[] = "correct";
+	char buf_e[] = "Error";
+	char buf_f[] = "korrekt";
 
     ssd1309_Fill(Black);
     ssd1309_UpdateScreen();
@@ -152,7 +154,7 @@ void auto_to_read_color_Handler(void)
 	{
 		move_servo(16);
 
-		for( uint8_t i=0; i<15; i++)
+		for( uint8_t i=0; i<11; i++)
 		{
 			pwm_servo_busy_flag = true;
 			CTIMER_StartTimer(CTIMER2);
@@ -169,15 +171,6 @@ void auto_to_read_color_Handler(void)
 			color = get_color();
 			cube_array [pos_array_read[pos_read]] = color;
 			pos_read++;
-
-			/*
-			while(!SW_flag_BL)
-			{
-
-			}
-			SW_flag_BL = false;
-			*/
-
 			move_servo(16);
 			move_motor(1, 125);
 		}
@@ -217,7 +210,8 @@ void auto_to_solve_Handler(void)
 {
 	char buf_1[] = "schnell";
 	char buf_2[] = "langsam";
-	char buf_4[] = "DONE";
+	//char buf_4[] = "DONE";
+	char buf_5[] = "Kein Cube";
 
 	for( uint8_t i=0; i<200; i++)
 	{
@@ -228,6 +222,9 @@ void auto_to_solve_Handler(void)
 	{
 		ssd1309_Fill(Black);
 		ssd1309_UpdateScreen();
+
+		ssd1309_SetCursor(20,20);
+		ssd1309_WriteString(buf_5, Font_11x18, White);
 
 		ssd1309_SetCursor(70,51);
 		ssd1309_WriteString(buf_back,Font_7x10, White);
@@ -247,8 +244,8 @@ void auto_to_solve_Handler(void)
 		ssd1309_SetCursor(2,50);
 		ssd1309_WriteString(buf_2,Font_7x10, White);
 
-		ssd1309_SetCursor(30,20);
-		ssd1309_WriteString(buf_4, Font_11x18, White);
+	//	ssd1309_SetCursor(30,20);
+	//	ssd1309_WriteString(buf_4, Font_11x18, White);
 
 		ssd1309_SetCursor(70,51);
 		ssd1309_WriteString(buf_back,Font_7x10, White);
@@ -295,6 +292,16 @@ void solve_to_fast_Handler(void)
 	itoa(move_count,print_moves_num, 10);
 	itoa(time,print_time_sec, 10);
 	itoa(time_ms,print_time_ms, 10);
+
+	for( uint8_t i=0; i<200; i++)
+	{
+		move_array_final[i]={0};
+	}
+
+	for(uint8_t i=0; i<54; i++)
+	{
+		cube_array[i] = 0;
+	}
 
 	ssd1309_Fill(Black);
 	ssd1309_UpdateScreen();
@@ -377,6 +384,16 @@ void solve_to_slow_Handler(void)
 	itoa(time,print_time_sec, 10);
 	itoa(time_ms,print_time_ms, 10);
 
+	for( uint8_t i=0; i<200; i++)
+	{
+		move_array_final[i]={0};
+	}
+
+	for(uint8_t i=0; i<54; i++)
+	{
+		cube_array[i] = 0;
+	}
+
 	ssd1309_Fill(Black);
 	ssd1309_UpdateScreen();
 
@@ -404,11 +421,48 @@ void solve_to_slow_Handler(void)
 	ssd1309_UpdateScreen();
 }
 
+void auto_to_change_Handler (void)
+{
+	char buf_1[] = "Fertig";
+
+    ssd1309_Fill(Black);
+    ssd1309_UpdateScreen();
+
+	ssd1309_SetCursor(2,3);
+	ssd1309_WriteString(buf_1,Font_7x10, White);
+
+	ssd1309_UpdateScreen();
+
+    GPIO_PinWrite(MOTOR_EN_GPIO, MOTOR_EN_PIN, M_DISABLE);
+
+	while(!SW_flag_TL)
+	{
+
+	}
+	SW_flag_TL = false;
+
+    ssd1309_Fill(Black);
+    ssd1309_UpdateScreen();
+
+	GPIO_PinWrite(MOTOR_EN_GPIO, MOTOR_EN_PIN, M_ENABLE);
+
+	config_motor();
+
+    ssd1309_Fill(Black);
+    ssd1309_UpdateScreen();
+
+	ssd1309_SetCursor(70,51);
+	ssd1309_WriteString(buf_back,Font_7x10, White);
+
+	ssd1309_UpdateScreen();
+}
+
 void back_to_auto(void)
 {
 	char buf_1[] = "verdrehen";
-	char buf_2[] = "Cube einlesen";
+	char buf_2[] = "Scan";
 	char buf_3[] = "loesen";
+	char buf_4[] = "Boxenstop";
 
     ssd1309_Fill(Black);
     ssd1309_UpdateScreen();
@@ -421,6 +475,9 @@ void back_to_auto(void)
 
 	ssd1309_SetCursor(80,3);
 	ssd1309_WriteString(buf_3,Font_7x10, White);
+
+	ssd1309_SetCursor(65,51);
+	ssd1309_WriteString(buf_4,Font_7x10, White);
 
 	ssd1309_UpdateScreen();
 }
@@ -500,7 +557,7 @@ void man_to_read_color_Handler(void)
 	{
 		move_servo(16);
 
-		for( uint8_t i=0; i<15; i++)
+		for( uint8_t i=0; i<11; i++)
 		{
 			pwm_servo_busy_flag = true;
 			CTIMER_StartTimer(CTIMER2);
@@ -717,13 +774,13 @@ Event_t get_new_Event(void)
 
 void runStateMachine(Event_t event)
 {
-
     for (uint8_t i = 0; i < sizeof(transitionTable) / sizeof(transitionTable[0]); i++)
     {
         if (transitionTable[i].current_state == CURRENT_STATE && transitionTable[i].event == event)
         {
             transitionTable[i].action();
             CURRENT_STATE = transitionTable[i].next_state;
+            flag_hit_2 = false;
             return;
         }
     }

@@ -268,6 +268,8 @@ int main(void)
     tcs.write8(TCS34725_PERS, TCS34725_PERS_NONE);
     tcs.setInterrupt(true);
 
+    GPIO_PinWrite(MOTOR_EN_GPIO, MOTOR_EN_PIN, M_ENABLE);
+
 	config_motor();
 
 	char buf_1[] = "Automatik";
