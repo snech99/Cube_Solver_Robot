@@ -410,7 +410,7 @@ instance:
         - config:
           - clockSource: 'kPWM_BusClock'
           - prescale: 'kPWM_Prescale_Divide_128'
-          - pwmFreq: '77Hz'
+          - pwmFreq: '76Hz'
           - pairOperation: 'kPWM_Independent'
           - operationMode: 'kPWM_SignedCenterAligned'
           - initializationControl: 'kPWM_Initialize_LocalSync'

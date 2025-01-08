@@ -1286,7 +1286,7 @@
                               <struct name="config">
                                  <setting name="clockSource" value="kPWM_BusClock"/>
                                  <setting name="prescale" value="kPWM_Prescale_Divide_128"/>
-                                 <setting name="pwmFreq" value="77Hz"/>
+                                 <setting name="pwmFreq" value="76Hz"/>
                                  <setting name="pairOperation" value="kPWM_Independent"/>
                                  <setting name="operationMode" value="kPWM_SignedCenterAligned"/>
                                  <setting name="initializationControl" value="kPWM_Initialize_LocalSync"/>

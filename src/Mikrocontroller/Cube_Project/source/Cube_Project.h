@@ -79,6 +79,7 @@ enum command
 	send_cube = 4,
 	moves = 5,
 	menu = 6,
+	change = 7,
 	err = 99,
 };
 

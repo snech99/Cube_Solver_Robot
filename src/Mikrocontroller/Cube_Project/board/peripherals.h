@@ -88,7 +88,7 @@ extern "C" {
 /* Definition of submodule 1 counter clock source frequency in Hertz - FLEXPWM0_SERVO_PWM_SM_CLK_SOURCE_FREQ_HZ divided by prescaler */
 #define FLEXPWM0_SERVO_PWM_COUNTER_CLK_SOURCE_FREQ_HZ 750000U
 /* Definition of submodule 1 counter (PWM) frequency in Hertz */
-#define FLEXPWM0_SERVO_PWM_COUNTER_FREQ_HZ 77U
+#define FLEXPWM0_SERVO_PWM_COUNTER_FREQ_HZ 76U
 /* Definition of submodule 1 channel A ID */
 #define FLEXPWM0_SERVO_PWM_A kPWM_PwmA
 /* Definition of submodule 1 channel B ID */

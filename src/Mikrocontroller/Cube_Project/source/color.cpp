@@ -9,33 +9,37 @@
 
 color_c detect_color(uint16_t red, uint16_t green, uint16_t blue, uint16_t clear)
 {
-	int32_t small = green - blue - red;
-	if(blue > 1300)
+	int sum = green + blue;
+	if(red < 1500)
 	{
-		return c_white;
+		if(sum < 1500)
+		{
+			return c_red;
+		}
+		else
+		{
+			if(blue < 1000)
+			{
+				return c_green;
+			}
+			else
+			{
+				return c_blue;
+			}
+		}
 	}
 
-	if((small > 0))
-	{
-		return c_green;
-	}
-
-	if(red < 375)
-	{
-		return c_blue;
-	}
-
-	if(green > 1100)
-	{
-		return c_yellow;
-	}
-
-	if(red > 1100)
+	if(green < 2000)
 	{
 		return c_orange;
 	}
 
-	return c_red;
+	if(blue > 2000)
+	{
+		return c_white;
+	}
+
+	return c_yellow;
 }
 
 uint8_t get_color()
@@ -44,9 +48,11 @@ uint8_t get_color()
     color_c detected_color;
 	color_busy_flag = true;
 
-	char buf_5[6] = {};
-	char buf_6[6] = {};
-	char buf_7[6] = {};
+	char buf_5[5] = {};
+	char buf_6[5] = {};
+	char buf_7[5] = {};
+
+	char erg_c[2] = {};
 
 	tcs.write8(TCS34725_PERS, TCS34725_PERS_NONE);
 	tcs.setInterrupt(true);
@@ -54,10 +60,23 @@ uint8_t get_color()
 	tcs.getRawData(&r_raw, &g_raw, &b_raw, &c_raw);
 	detected_color = detect_color(r_raw, g_raw, b_raw, c_raw);
 
+	tcs.clearInterrupt();
+
+	while(color_busy_flag)
+	{
+
+	}
+
+
 	/*
 	itoa(r_raw,buf_5,10);
 	itoa(g_raw,buf_6,10);
 	itoa(b_raw,buf_7,10);
+
+	itoa((int)detected_color,erg_c,10);
+
+    ssd1309_Fill(Black);
+    ssd1309_UpdateScreen();
 
 	ssd1309_SetCursor(3,3);
 	ssd1309_WriteString(buf_5,Font_7x10, White);
@@ -67,16 +86,13 @@ uint8_t get_color()
 
 	ssd1309_SetCursor(3,37);
 	ssd1309_WriteString(buf_7,Font_7x10, White);
+
+	ssd1309_SetCursor(50,25);
+	ssd1309_WriteString(erg_c,Font_7x10, White);
+
+	ssd1309_UpdateScreen();
 	*/
 
-	tcs.clearInterrupt();
-
-	while(color_busy_flag)
-	{
-
-	}
-
-    //ssd1309_UpdateScreen();
 
 	return (uint8_t)detected_color;
 }

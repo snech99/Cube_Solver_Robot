@@ -24,6 +24,7 @@ typedef enum
 	msg_read_color,
 	msg_send_cube,
 	msg_solve,
+	msg_change,
 	default_event,
 }Event_t;
 
@@ -49,6 +50,7 @@ void man_to_random_Handler(void);
 void man_to_read_color_Handler(void);
 void man_to_send_cube_Handler(void);
 void man_to_solve_Handler(void);
+void man_to_change_Handler(void);
 
 void super_machine();
 

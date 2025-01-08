@@ -6,6 +6,8 @@ bool check_random(uint16_t*);
 bool check_solve(uint16_t*);
 bool check_send_cube (uint16_t *);
 bool check_moves (uint16_t *);
+bool check_change (uint16_t *);
+
 
 message get_command_and_data (uint8_t *read_array)
 {
@@ -69,6 +71,12 @@ message get_command_and_data (uint8_t *read_array)
        	msg.m_command = moves;
        	return msg;
     }
+
+    if (check_change(command_string))
+	{
+		msg.m_command = change;
+		return msg;
+	}
 
     return msg;
 }
@@ -134,6 +142,20 @@ bool check_moves(uint16_t* array)
 	uint8_t test_read[5] = {'m','o','v','e','s'};
 
 	for (int i=0; i<5; i++)
+	{
+		if(test_read[i] != array[i])
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+bool check_change(uint16_t* array)
+{
+	uint8_t test_read[6] = {'c','h','a','n','g','e'};
+
+	for (int i=0; i<6; i++)
 	{
 		if(test_read[i] != array[i])
 		{
