@@ -153,8 +153,6 @@ void auto_to_read_color_Handler(void)
 
 	for(uint8_t i=0; i<6; i++)
 	{
-		move_servo(16);
-
 		PWM_ramp_time = RAMP_SHORT;
 		move_servo(15);
 		for( uint8_t i=0; i<5; i++)
@@ -171,19 +169,10 @@ void auto_to_read_color_Handler(void)
 		{
 			color = get_color();
 			cube_array [pos_array_read[pos_read]] = color;
-
-			/*
-			while(!SW_flag_BL)
-			{
-
-			}
-			SW_flag_BL = false;
-			*/
-
 			pos_read++;
 			move_motor(1, 125);
 
-			for( uint8_t i=0; i<10; i++)
+			for( uint8_t i=0; i<8; i++)
 			{
 				pwm_servo_busy_flag = true;
 				CTIMER_StartTimer(CTIMER2);
@@ -193,13 +182,13 @@ void auto_to_read_color_Handler(void)
 				}
 			}
 		}
-
 		PWM_ramp_time = RAMP_LONG;
-		move_servo(18);
+		move_servo(17);
 		change_sides(i);
 	}
 
 	GPIO_PinWrite(GPIO2,LED_SWITCH_PIN, 0);
+	move_servo(18);
 
     ssd1309_Fill(Black);
     ssd1309_UpdateScreen();
@@ -616,7 +605,7 @@ void man_to_read_color_Handler(void)
 			}
 
 			PWM_ramp_time = RAMP_LONG;
-			move_servo(18);
+			move_servo(17);
 			change_sides(i);
 		}
 
@@ -624,6 +613,7 @@ void man_to_read_color_Handler(void)
 	char buf_f[] = "korrekt";
 
 	GPIO_PinWrite(GPIO2,LED_SWITCH_PIN, 0);
+	move_servo(18);
 
 	ssd1309_Fill(Black);
 	ssd1309_UpdateScreen();
@@ -632,12 +622,12 @@ void man_to_read_color_Handler(void)
 	if(!check_colors())
 	{
 		ssd1309_WriteString(buf_e, Font_11x18, White);
-		/*
+
 		for(uint8_t i=0; i<54; i++)
 		{
 			cube_array[i] = 0;
 		}
-		*/
+
 	}
 	else
 	{
@@ -848,6 +838,8 @@ Event_t get_new_Event(void)
 
 void runStateMachine(Event_t event)
 {
+	uint8_t busy_msg[1] = {1};
+
     for (uint8_t i = 0; i < sizeof(transitionTable) / sizeof(transitionTable[0]); i++)
     {
         if (transitionTable[i].current_state == CURRENT_STATE && transitionTable[i].event == event)
@@ -855,6 +847,8 @@ void runStateMachine(Event_t event)
             transitionTable[i].action();
             CURRENT_STATE = transitionTable[i].next_state;
             flag_hit_2 = false;
+
+        	LPUART_WriteBlocking(LPUART2_PERIPHERAL, busy_msg, sizeof(busy_msg));
             return;
         }
     }
