@@ -2,7 +2,7 @@
 
 int main(int argc, char *argv[]) 
 {
-  char eingabe[3] = {};
+  char input[3] = {};
   char c = 0;
   int a = 0;
 
@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
 
   if(config_serial(&serial_port) != 0)
   {
-      printf("Error in config!\n");
+      printf("Error in tty config!\n");
       return 1;
   };
 
@@ -28,7 +28,6 @@ int main(int argc, char *argv[])
   char buf_send[] = {'$','s','e','n','d','_','c','u','b','e','!','%'};
   char buf_rand[] = {'$','r','a','n','d','o','m','!','%'};
   char buf_change[] = {'$','c','h','a','n','g','e','!','%'};
-
 
   char buf_solve[1033] = {};
 
@@ -44,44 +43,41 @@ int main(int argc, char *argv[])
 
   char read_buf[61] = {};
   char buf_busy[1] = {};
-
-
   int pos = 0;
 
-  printf("Cube einlesen: 1\nGelesenen Cube empfangen: 2\nEmpfangenen Cube anzeigen: 3\nPython-Berechnung: 4\nLoesung senden und ausfuehren: 5\nZufaellig verdrehen: 6\nCube tauschen: 7\nBeenden: 8\n");
+  printf("Cube scanning: 1\nGet the Cube from Robot: 2\nShow the Cube: 3\nPython-Script: 4\nSend moves and solve: 5\n20 random moves: 6\nChange Cube: 7\nEnd program: 8\n");
 
   while(1)
   {
-    if(fgets(eingabe, sizeof(eingabe), stdin) != NULL)
+    if(fgets(input, sizeof(input), stdin) != NULL)
     {
 
-      a = atoi(eingabe);
+      a = atoi(input);
+
       if (a < 1 || a > 8) 
       {
-          printf("Ungültige Zahl! Die Zahl muss zwischen 1 und 8 liegen.\n");
+          printf("Invalid Number! It must be between 1 and 8.\n");
       }
 
-      switch(eingabe[0])
+      switch(input[0])
       {
-        case '1':   write(serial_port, buf_read, sizeof(buf_read));
-
-                  printf("Cube wird eingelesen ...\n");
+        case '1': write(serial_port, buf_read, sizeof(buf_read));
+                  printf("Scanning the Cube...\n");
                   read(serial_port, buf_busy, sizeof(buf_busy));
                   if(buf_busy[0] == 1)
                   {
-                    printf("Fertig mit einlesen!\n");
+                    printf("Done with scanning!\n");
                   }
                   else
                   {
-                    printf("Error: Handshake Einlesen\n");
+                    printf("Error: Handshake Scanning\n");
                   }
 
                   printf("\n");
-                  printf("Cube einlesen: 1\nGelesenen Cube empfangen: 2\nEmpfangenen Cube anzeigen: 3\nPython-Berechnung: 4\nLoesung senden und ausfuehren: 5\nZufaellig verdrehen: 6\nCube tauschen: 7\nBeenden: 8\n");
-
+                  printf("Cube scanning: 1\nGet the Cube from Robot: 2\nShow the Cube: 3\nPython-Script: 4\nSend moves and solve: 5\n20 random moves: 6\nChange Cube: 7\nEnd program: 8\n");
                   break;
 
-        case '2':   write(serial_port, buf_send, sizeof(buf_send));
+        case '2': write(serial_port, buf_send, sizeof(buf_send));
                   read(serial_port, read_buf, sizeof(read_buf));   
               
                   for(int i=0; i<54; i++)
@@ -91,25 +87,24 @@ int main(int argc, char *argv[])
 
                   if(cube_buf[0] == 0)
                   {
-                    printf("Fehler beim Einlesen oder kein Cube vorhanden\n");
+                    printf("Error due reading\n");
                   }
                   else 
                   {
-                    printf("Cube_Array erhalten\n");
+                    printf("Cube received!\n");
 
                   }  
 
                   read(serial_port, buf_busy, sizeof(buf_busy));
 
                   printf("\n");
-                  printf("Cube einlesen: 1\nGelesenen Cube empfangen: 2\nEmpfangenen Cube anzeigen: 3\nPython-Berechnung: 4\nLoesung senden und ausfuehren: 5\nZufaellig verdrehen: 6\nCube tauschen: 7\nBeenden: 8\n");
-
+                  printf("Cube scanning: 1\nGet the Cube from Robot: 2\nShow the Cube: 3\nPython-Script: 4\nSend moves and solve: 5\n20 random moves: 6\nChange Cube: 7\nEnd program: 8\n");
                   break;
 
         case '3': pos = 0;
                   if(cube_buf[0] == 0)
                   {
-                      printf("Kein Cube vorhanden oder fehlerhaft eingelesen!\n");
+                      printf("There is no Cube or err in scanning!\n");
                       break;
                   }
 
@@ -127,11 +122,9 @@ int main(int argc, char *argv[])
                     }
                     printf("\n");
                   }
-
-                  fflush(stdin);
                   
                   printf("\n");
-                  printf("Cube einlesen: 1\nGelesenen Cube empfangen: 2\nEmpfangenen Cube anzeigen: 3\nPython-Berechnung: 4\nLoesung senden und ausfuehren: 5\nZufaellig verdrehen: 6\nCube tauschen: 7\nBeenden: 8\n");
+                  printf("Cube scanning: 1\nGet the Cube from Robot: 2\nShow the Cube: 3\nPython-Script: 4\nSend moves and solve: 5\n20 random moves: 6\nChange Cube: 7\nEnd program: 8\n");
                   break;
 
         case '4': for(int i=0; i<1024; i++)
@@ -139,9 +132,12 @@ int main(int argc, char *argv[])
                     erg_buf[i] = 0;
                   }
 
-                  printf("Berechnung startet..\n");
-                  fork_and_send(cube_buf, erg_buf, script_name); 
-                  printf("Berechnung beendet!\n");
+                  printf("Starting Python-Script\n");
+                  if( fork_and_send(cube_buf, erg_buf, script_name) != 0)
+                  {
+                    printf("Error in fork!\n");
+                  } 
+                  printf("Calculation in Python done!\n");
                 
                   for (int i = 0; i < 1024; i++) 
                   {
@@ -150,17 +146,15 @@ int main(int argc, char *argv[])
                   } 
 
                   printf("\n");
-                  printf("Cube einlesen: 1\nGelesenen Cube empfangen: 2\nEmpfangenen Cube anzeigen: 3\nPython-Berechnung: 4\nLoesung senden und ausfuehren: 5\nZufaellig verdrehen: 6\nCube tauschen: 7\nBeenden: 8\n");
-
+                  printf("Cube scanning: 1\nGet the Cube from Robot: 2\nShow the Cube: 3\nPython-Script: 4\nSend moves and solve: 5\n20 random moves: 6\nChange Cube: 7\nEnd program: 8\n");
                   break;
 
-        case '5':   write(serial_port, buf_solve, sizeof(buf_solve));
-
-                  printf("Roboter dreht ...\n");
+        case '5': write(serial_port, buf_solve, sizeof(buf_solve));
+                  printf("Robot is moving ..\n");
                   read(serial_port, buf_busy, sizeof(buf_busy));
                   if(buf_busy[0] == 1)
                   {
-                    printf("Fertig geloest!\n");
+                    printf("Solved\n");
                   }
                   else
                   {
@@ -168,37 +162,32 @@ int main(int argc, char *argv[])
                   }
 
                   printf("\n");
-                  printf("Cube einlesen: 1\nGelesenen Cube empfangen: 2\nEmpfangenen Cube anzeigen: 3\nPython-Berechnung: 4\nLoesung senden und ausfuehren: 5\nZufaellig verdrehen: 6\nCube tauschen: 7\nBeenden: 8\n");
-                            
+                  printf("Cube scanning: 1\nGet the Cube from Robot: 2\nShow the Cube: 3\nPython-Script: 4\nSend moves and solve: 5\n20 random moves: 6\nChange Cube: 7\nEnd program: 8\n");                           
                   break;
 
-        case '6':   write(serial_port, buf_rand, sizeof(buf_rand));
-
-                  printf("Cube wird verdreht...\n");
+        case '6': write(serial_port, buf_rand, sizeof(buf_rand));
+                  printf("Cube is doing random moves..\n");
                   read(serial_port, buf_busy, sizeof(buf_busy));
                   if(buf_busy[0] == 1)
                   {
-                    printf("Fertig verdreht!\n");
+                    printf("Done twisting!\n");
                   }
                   else
                   {
-                    printf("Error: Handshake Random\n");
+                    printf("Error: Handshake random\n");
                   }
                   
-
                   printf("\n");
-                  printf("Cube einlesen: 1\nGelesenen Cube empfangen: 2\nEmpfangenen Cube anzeigen: 3\nPython-Berechnung: 4\nLoesung senden und ausfuehren: 5\nZufaellig verdrehen: 6\nCube tauschen: 7\nBeenden: 8\n");
-
+                  printf("Cube scanning: 1\nGet the Cube from Robot: 2\nShow the Cube: 3\nPython-Script: 4\nSend moves and solve: 5\n20 random moves: 6\nChange Cube: 7\nEnd program: 8\n");
                   break;  
 
         case '7': write(serial_port, buf_change, sizeof(buf_change));
-
-                  printf("Cube wird getauscht\n");
-                  printf("Bitte am Roboter freigeben!\n");
+                  printf("Changing Cube ...\n");
+                  printf("Please confirm with the Button at the end!\n");
                   read(serial_port, buf_busy, sizeof(buf_busy));
                   if(buf_busy[0] == 1)
                   {
-                    printf("Getauscht und Kalibriert!\n");
+                    printf("changed and calibrated!\n");
                   }
                   else
                   {
@@ -206,14 +195,13 @@ int main(int argc, char *argv[])
                   }
 
                   printf("\n");
-                  printf("Cube einlesen: 1\nGelesenen Cube empfangen: 2\nEmpfangenen Cube anzeigen: 3\nPython-Berechnung: 4\nLoesung senden und ausfuehren: 5\nZufaellig verdrehen: 6\nCube tauschen: 7\nBeenden: 8\n");
-                  
+                  printf("Cube scanning: 1\nGet the Cube from Robot: 2\nShow the Cube: 3\nPython-Script: 4\nSend moves and solve: 5\n20 random moves: 6\nChange Cube: 7\nEnd program: 8\n");                
                   break; 
 
-        case '8':   close(serial_port);
+        case '8': close(serial_port);
                   return 0;
 
-        default:  printf("Ungültige Eingabe! Bitte geben Sie eine Zahl ein.\n");  
+        default:  printf("Invalid Number! It must be between 1 and 8.\n"); 
                   break;
       }
     }
@@ -223,11 +211,3 @@ int main(int argc, char *argv[])
   close(serial_port);
   return 0;
 };
-
-/*
-void clear_and_printf()
-{
-  system("clear");
-  printf("Cube einlesen: 1\nGelesenen Cube empfangen: 2\nEmpfangenen Cube anzeigen: 3\nPython-Berechnung: 4\nLoesung senden und ausfuehren: 5\nZufaellig verdrehen: 6\nCube tauschen: 7\nBeenden: 8\n");
-}
-*/

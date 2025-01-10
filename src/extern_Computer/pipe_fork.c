@@ -36,82 +36,74 @@ int fork_and_send (int array[54], int *erg, char* name)
         if (errno != EEXIST)
         {
             perror("fifo");
+			return 1;
         }
     }
 
 	childpid=fork();	//Prozess dublizieren
 
-	switch (childpid){
-	case -1: 
-		perror("forken:");   //Fehlerbehandlung fork
-		return 1;
+	switch (childpid)
+	{
+		case -1:	perror("forken:");   //Fehlerbehandlung fork
+					return 1;
 
-	//Kindprozess	 
-	case  0: 
+		//Kindprozess	 
+		case  0:	if ( execlp("python3", "python3", name, NULL) == -1)
+					{
+						perror("exec:");
+					}	
+					exit(EXIT_SUCCESS);
 
-		if ( execlp("python3", "python3", name, NULL) == -1)
-		{
-			perror("exec:");
-		}	
-		exit(EXIT_SUCCESS);
+		//Elternprozess
+		default:	fd = open(myfifo, O_WRONLY);
+					if (fd == -1) 
+					{
+						perror("open");
+						return 1;
+					}
 
-	//Elternprozess
-	default:
+					if (write(fd, array, 54 * sizeof(int)) == -1) 
+					{
+						perror("write array");
+						close(fd);
+						return 1;
+					}
+					close(fd);
 
-		fd = open(myfifo, O_WRONLY);
-		if (fd == -1) 
-		{
-			perror("open");
-			exit(1);
-		}
+					fd = 0;
+					fd = open(myfifo, O_RDONLY);
+					if (fd == -1) 
+					{
+						perror("open");
+						return 1;
+					}
 
-		if (write(fd, array, 54 * sizeof(int)) == -1) 
-		{
-			perror("write array");
-			close(fd);
-			exit(1);
-		}
+					while(ok)
+					{
+						int num;
+						ssize_t bytes_read = read(fd, &num, sizeof(num));
 
-		close(fd);
+						// Wenn weniger als 4 Bytes gelesen wurden, ist das Ende der FIFO erreicht
+						if (bytes_read < sizeof(num)) 
+						{
+							if (bytes_read == 0) 
+							{
+								ok = 0;
+							} 
+							else 
+							{
+								printf("Unvollständige Daten empfangen, Abbruch.\n");
+								ok = 0;
+							}
+							break;
+						}
+						erg[idx] = num;
+						idx++;
+					}
 
-		fd = 0;
-
-		fd = open(myfifo, O_RDONLY);
-    	if (fd == -1) 
-		{
-        	perror("open");
-        	exit(1);
-    	}
-
-		while(ok)
-		{
-			int num;
-			ssize_t bytes_read = read(fd, &num, sizeof(num));
-
-			// Wenn weniger als 4 Bytes gelesen wurden, ist das Ende der FIFO erreicht
-			if (bytes_read < sizeof(num)) 
-			{
-				if (bytes_read == 0) 
-				{
-					ok = 0;
-				} 
-				else 
-				{
-					printf("Unvollständige Daten empfangen, Abbruch.\n");
-					ok = 0;
-				}
-				break;
-			}
-			erg[idx] = num;
-			idx++;
-		}
-
-        close(fd);	
-
-		wait(&status);
-		child_status(status);
-		printf("\n");	 
-	}
-	
+					close(fd);	
+					wait(&status);
+					child_status(status);
+	}	
 	return 0;
 }

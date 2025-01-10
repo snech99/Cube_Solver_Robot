@@ -55,11 +55,5 @@ void man_to_change_Handler(void);
 void super_machine();
 
 extern Event_t new_event;
-extern char buf_name_white[6];
-extern char buf_name_yellow[5];
-extern char buf_name_red[4];
-extern char buf_name_green[6];
-extern char buf_name_orange[7];
-extern char buf_name_blue[5];
 
 #endif /* STATE_MACHINE_H_ */

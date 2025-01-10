@@ -31,7 +31,6 @@ volatile int32_t PWM_flanke_count = 250;
 volatile uint32_t PWM_frequenz = PWM_FREQUENZ;
 volatile uint32_t PWM_ramp_time = RAMP_LONG;
 
-//8kHz -> unter 62.5ms
 void TIMER1_CALLBACK_RAMPE(uint32_t flags)
 {
 	if (pwm_ms_count < (PWM_ramp_time-1))
@@ -176,28 +175,24 @@ extern "C" void GPIO2_IRQHANDLER(void)
 	{
 		DisableIRQ(GPIO2_IRQN);
 		CTIMER_StartTimer(CTIMER0);
-		//SW_flag_TL = true;
 	}
 
 	if((hit_flag>>TASTER_T_R) == 1)
 	{
 		DisableIRQ(GPIO2_IRQN);
 		CTIMER_StartTimer(CTIMER0);
-		//SW_flag_TR = true;
 	}
 
 	if((hit_flag>>TASTER_B_L) == 1)
 	{
 		DisableIRQ(GPIO2_IRQN);
 		CTIMER_StartTimer(CTIMER0);
-		//SW_flag_BL = true;
 	}
 
 	if((hit_flag>>TASTER_B_R) == 1)
 	{
 		DisableIRQ(GPIO2_IRQN);
 		CTIMER_StartTimer(CTIMER0);
-		//SW_flag_BR = true;
 	}
 
 	GPIO_GpioClearInterruptFlags(GPIO2, 1<<TASTER_T_L);
@@ -248,39 +243,40 @@ uint32_t calc_time_ms()
  */
 int main(void)
 {
+	char buf_1[] = "Automatic (intern)";
+	char buf_2[] = "external PC via USB";
+	char buf_e[] = "err in Sensor-Config";
+
     BOARD_InitBootPins();
     BOARD_InitBootClocks();
     BOARD_InitBootPeripherals();
 
     SysTick_Config(SystemCoreClock/1000);
 
+    ssd1309_Fill(Black);
+    ssd1309_UpdateScreen();
+
     ssd1309_Init();
 
     if (!tcs.init())
     {
-    	//error
+    	ssd1309_SetCursor(2,3);
+    	ssd1309_WriteString(buf_e,Font_7x10, White);
     }
     else
     {
-    	//correct
+    	ssd1309_SetCursor(2,3);
+    	ssd1309_WriteString(buf_1,Font_7x10, White);
+    	ssd1309_SetCursor(2,50);
+    	ssd1309_WriteString(buf_2,Font_7x10, White);
     }
+    ssd1309_UpdateScreen();
 
     tcs.write8(TCS34725_PERS, TCS34725_PERS_NONE);
     tcs.setInterrupt(true);
 
     GPIO_PinWrite(MOTOR_EN_GPIO, MOTOR_EN_PIN, M_ENABLE);
-
 	config_motor();
-
-	char buf_1[] = "Automatik";
-	char buf_2[] = "Extern";
-    ssd1309_Fill(Black);
-    ssd1309_UpdateScreen();
-	ssd1309_SetCursor(2,3);
-	ssd1309_WriteString(buf_1,Font_7x10, White);
-	ssd1309_SetCursor(2,50);
-	ssd1309_WriteString(buf_2,Font_7x10, White);
-	ssd1309_UpdateScreen();
 
 	while(true)
 	{

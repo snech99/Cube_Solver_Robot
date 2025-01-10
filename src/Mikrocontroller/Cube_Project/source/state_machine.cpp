@@ -9,17 +9,11 @@ Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_240MS, TCS347
 State_t CURRENT_STATE = config;
 message msg;
 int move_array_final [200] = {};
-
-char buf_name_white[] = "weiss";
-char buf_name_yellow[] = "gelb";
-char buf_name_red[] = "rot";
-char buf_name_green[] = "gruen";
-char buf_name_orange[] = "orange";
-char buf_name_blue[] = "blau";
-
-char buf_back[] = "zurueck";
+char buf_back[] = "back";
 
 int cube_array[54] = {};
+
+int manual_state_flag = 0;
 
 uint8_t move_count = 0;
 
@@ -51,12 +45,13 @@ State_Transition transitionTable[] =
 
 void config_to_man_Handler(void)
 {
-	char buf_1[] = "1:Einlesen";
-	char buf_2[] = "2:Cube senden";
-	char buf_5[] = "5:Zuege ausfuehren";
-	char buf_6[] = "6:Random verdrehen";
-	char buf_7[] = "7:Cube tauschen";
+	manual_state_flag = 1;
 
+	char buf_1[] = "1:Scan Cube";
+	char buf_2[] = "2:Send Cube to PC";
+	char buf_5[] = "5:Move Cube and Solve";
+	char buf_6[] = "6:20 Random moves";
+	char buf_7[] = "7:Change Cube";
 
     ssd1309_Fill(Black);
     ssd1309_UpdateScreen();
@@ -112,7 +107,7 @@ void auto_to_random_Handler(void)
 
 	ssd1309_Fill(Black);
 	ssd1309_UpdateScreen();
-	ssd1309_SetCursor(70,51);
+	ssd1309_SetCursor(90,51);
 	ssd1309_WriteString(buf_back,Font_7x10, White);
 	ssd1309_UpdateScreen();
 }
@@ -121,14 +116,14 @@ void auto_to_read_color_Handler(void)
 {
 	GPIO_PinWrite(GPIO2,LED_SWITCH_PIN, 1);
 
-	char buf[] = "scan";
-	char buf_e[] = "Error";
-	char buf_f[] = "korrekt";
+	char buf[] = "scanning ...";
+	char buf_e[] = "error";
+	char buf_f[] = "correct";
 
     ssd1309_Fill(Black);
     ssd1309_UpdateScreen();
-	ssd1309_SetCursor(44,20);
-	ssd1309_WriteString(buf, Font_11x18, White);
+	ssd1309_SetCursor(20,25);
+	ssd1309_WriteString(buf, Font_7x10, White);
     ssd1309_UpdateScreen();
 
 	cube_array [4] = 1;
@@ -209,17 +204,16 @@ void auto_to_read_color_Handler(void)
 		ssd1309_WriteString(buf_f, Font_11x18, White);
 	}
 
-	ssd1309_SetCursor(70,51);
+	ssd1309_SetCursor(90,51);
 	ssd1309_WriteString(buf_back,Font_7x10, White);
 	ssd1309_UpdateScreen();
 }
 
 void auto_to_solve_Handler(void)
 {
-	char buf_1[] = "schnell";
-	char buf_2[] = "langsam";
-	//char buf_4[] = "DONE";
-	char buf_5[] = "Kein Cube";
+	char buf_1[] = "fast";
+	char buf_2[] = "slow";
+	char buf_5[] = "No Cube";
 
 	for( uint8_t i=0; i<200; i++)
 	{
@@ -234,7 +228,7 @@ void auto_to_solve_Handler(void)
 		ssd1309_SetCursor(20,20);
 		ssd1309_WriteString(buf_5, Font_11x18, White);
 
-		ssd1309_SetCursor(70,51);
+		ssd1309_SetCursor(90,51);
 		ssd1309_WriteString(buf_back,Font_7x10, White);
 
 		ssd1309_UpdateScreen();
@@ -252,10 +246,7 @@ void auto_to_solve_Handler(void)
 		ssd1309_SetCursor(2,50);
 		ssd1309_WriteString(buf_2,Font_7x10, White);
 
-	//	ssd1309_SetCursor(30,20);
-	//	ssd1309_WriteString(buf_4, Font_11x18, White);
-
-		ssd1309_SetCursor(70,51);
+		ssd1309_SetCursor(90,51);
 		ssd1309_WriteString(buf_back,Font_7x10, White);
 
 		ssd1309_UpdateScreen();
@@ -332,7 +323,7 @@ void solve_to_fast_Handler(void)
 	ssd1309_SetCursor(65+offset,40);
 	ssd1309_WriteString(s_print, Font_7x10, White);
 
-	ssd1309_SetCursor(70,53);
+	ssd1309_SetCursor(90,53);
 	ssd1309_WriteString(buf_back,Font_7x10, White);
 
 	ssd1309_UpdateScreen();
@@ -371,7 +362,6 @@ void solve_to_slow_Handler(void)
 
 			}
 		}
-
 		pos++;
 	}
 
@@ -423,7 +413,7 @@ void solve_to_slow_Handler(void)
 	ssd1309_SetCursor(65+offset,40);
 	ssd1309_WriteString(s_print, Font_7x10, White);
 
-	ssd1309_SetCursor(70,51);
+	ssd1309_SetCursor(90,51);
 	ssd1309_WriteString(buf_back,Font_7x10, White);
 
 	ssd1309_UpdateScreen();
@@ -431,7 +421,7 @@ void solve_to_slow_Handler(void)
 
 void auto_to_change_Handler (void)
 {
-	char buf_1[] = "Fertig";
+	char buf_1[] = "Change done";
 
     ssd1309_Fill(Black);
     ssd1309_UpdateScreen();
@@ -456,10 +446,7 @@ void auto_to_change_Handler (void)
 
 	config_motor();
 
-    ssd1309_Fill(Black);
-    ssd1309_UpdateScreen();
-
-	ssd1309_SetCursor(70,51);
+	ssd1309_SetCursor(90,51);
 	ssd1309_WriteString(buf_back,Font_7x10, White);
 
 	ssd1309_UpdateScreen();
@@ -467,10 +454,10 @@ void auto_to_change_Handler (void)
 
 void back_to_auto(void)
 {
-	char buf_1[] = "verdrehen";
-	char buf_2[] = "Scan";
-	char buf_3[] = "loesen";
-	char buf_4[] = "Boxenstop";
+	char buf_1[] = "Random moves";
+	char buf_2[] = "Scan Cube";
+	char buf_3[] = "Solve";
+	char buf_4[] = "Change Cube";
 
     ssd1309_Fill(Black);
     ssd1309_UpdateScreen();
@@ -533,12 +520,14 @@ void man_to_read_color_Handler(void)
 {
 	GPIO_PinWrite(GPIO2,LED_SWITCH_PIN, 1);
 
-	char buf[] = "scan";
+	char buf[] = "scanning ...";
+	char buf_e[] = "error";
+	char buf_f[] = "correct";
 
 	ssd1309_Fill(Black);
 	ssd1309_UpdateScreen();
 	ssd1309_SetCursor(44,20);
-	ssd1309_WriteString(buf, Font_11x18, White);
+	ssd1309_WriteString(buf, Font_7x10, White);
 	ssd1309_UpdateScreen();
 
 	cube_array [4] = 1;
@@ -552,65 +541,62 @@ void man_to_read_color_Handler(void)
 	uint8_t pos_read = 0;
 
 	volatile uint8_t pos_array_read[48] =
+	{
+			3,6,7,8,5,2,1,0,
+			16,17,14,11,10,9,12,15,
+			23,20,19,18,21,24,25,26,
+			28,27,30,33,34,35,32,29,
+			39,42,43,44,41,38,37,36,
+			48,51,46,53,50,47,52,45
+	};
+
+	for(uint8_t i=0; i<6; i++)
+	{
+		move_servo(16);
+		for( uint8_t i=0; i<2; i++)
 		{
-				3,6,7,8,5,2,1,0,
-				16,17,14,11,10,9,12,15,
-				23,20,19,18,21,24,25,26,
-				28,27,30,33,34,35,32,29,
-				39,42,43,44,41,38,37,36,
-				48,51,46,53,50,47,52,45
-		};
-
-		for(uint8_t i=0; i<6; i++)
-		{
-			move_servo(16);
-			for( uint8_t i=0; i<2; i++)
+			pwm_servo_busy_flag = true;
+			CTIMER_StartTimer(CTIMER2);
+			while(pwm_servo_busy_flag)
 			{
-				pwm_servo_busy_flag = true;
-				CTIMER_StartTimer(CTIMER2);
-				while(pwm_servo_busy_flag)
-				{
 
-				}
 			}
-
-			PWM_ramp_time = RAMP_SHORT;
-			move_servo(15);
-			for( uint8_t i=0; i<5; i++)
-			{
-				pwm_servo_busy_flag = true;
-				CTIMER_StartTimer(CTIMER2);
-				while(pwm_servo_busy_flag)
-				{
-
-				}
-			}
-
-			for(uint8_t k=0; k<8; k++)
-			{
-				color = get_color();
-				cube_array [pos_array_read[pos_read]] = color;
-				pos_read++;
-				move_motor(1, 125);
-
-				for( uint8_t i=0; i<15; i++)
-				{
-					pwm_servo_busy_flag = true;
-					CTIMER_StartTimer(CTIMER2);
-					while(pwm_servo_busy_flag)
-					{
-
-					}
-				}
-			}
-
-			PWM_ramp_time = RAMP_LONG;
-			move_servo(17);
-			change_sides(i);
 		}
 
-	char buf_e[] = "error";
-	char buf_f[] = "korrekt";
+		PWM_ramp_time = RAMP_SHORT;
+		move_servo(15);
+		for( uint8_t i=0; i<5; i++)
+		{
+			pwm_servo_busy_flag = true;
+			CTIMER_StartTimer(CTIMER2);
+			while(pwm_servo_busy_flag)
+			{
+
+			}
+		}
+
+		for(uint8_t k=0; k<8; k++)
+		{
+			color = get_color();
+			cube_array [pos_array_read[pos_read]] = color;
+			pos_read++;
+			move_motor(1, 125);
+
+			for( uint8_t i=0; i<8; i++)
+			{
+				pwm_servo_busy_flag = true;
+				CTIMER_StartTimer(CTIMER2);
+				while(pwm_servo_busy_flag)
+				{
+
+				}
+			}
+		}
+
+		PWM_ramp_time = RAMP_LONG;
+		move_servo(17);
+		change_sides(i);
+	}
 
 	GPIO_PinWrite(GPIO2,LED_SWITCH_PIN, 0);
 	move_servo(18);
@@ -627,7 +613,6 @@ void man_to_read_color_Handler(void)
 		{
 			cube_array[i] = 0;
 		}
-
 	}
 	else
 	{
@@ -652,7 +637,6 @@ void man_to_send_cube_Handler(void)
 	}
 
 	config_to_man_Handler();
-
 	LPUART_WriteBlocking(LPUART2_PERIPHERAL, cube_message, sizeof(cube_message));
 }
 
@@ -669,7 +653,7 @@ void man_to_solve_Handler(void)
 	uint32_t time = 0;
 	uint32_t time_ms = 0;
 
-	char buf[] = "solve";
+	char buf[] = "solving ..";
 
 	ssd1309_Fill(Black);
 	ssd1309_UpdateScreen();
@@ -731,7 +715,7 @@ void man_to_solve_Handler(void)
 
 void man_to_change_Handler(void)
 {
-	char buf_1[] = "Fertig";
+	char buf_1[] = "Change done";
 
 	ssd1309_Fill(Black);
 	ssd1309_UpdateScreen();
@@ -848,7 +832,10 @@ void runStateMachine(Event_t event)
             CURRENT_STATE = transitionTable[i].next_state;
             flag_hit_2 = false;
 
-        	LPUART_WriteBlocking(LPUART2_PERIPHERAL, busy_msg, sizeof(busy_msg));
+            if(manual_state_flag == 1)
+            {
+            	LPUART_WriteBlocking(LPUART2_PERIPHERAL, busy_msg, sizeof(busy_msg));
+            }
             return;
         }
     }

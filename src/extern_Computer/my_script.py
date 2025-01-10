@@ -6,7 +6,7 @@ FIFO_NAME = "myfifo"
 
 def read_from_fifo():
     if not os.path.exists(FIFO_NAME):
-        print("FIFO existiert nicht.")
+        print("FIFO doesn't exist.")
         return
 
     received_data = []
@@ -16,7 +16,7 @@ def read_from_fifo():
             data = fifo.read(4)
             if len(data) < 4:
                 if len(data) != 0:
-                    print("Unvollständige Daten empfangen, Abbruch.")
+                    print("Terminating due FIFO read")
                 break 
 
             num = struct.unpack('i', data)[0]
@@ -29,7 +29,6 @@ def write_to_fifo(array):
         for num in array:
             fifo.write(struct.pack('i', num))
 
-
 #Hier die Lösung einfügen
 #Rückgabe maximal 1024 Integer-Werte
 def solver():
@@ -41,11 +40,7 @@ def solver():
     #erg = [1,2,3,4,5,6,7,8,9,10,11,12]
     return erg
 
-
 if __name__ == "__main__":
     read_from_fifo()
-
     erg = solver()
-
     write_to_fifo(erg)
-

@@ -67,7 +67,6 @@ uint8_t get_color()
 
 	}
 
-
 	/*
 	itoa(r_raw,buf_5,10);
 	itoa(g_raw,buf_6,10);
@@ -92,8 +91,6 @@ uint8_t get_color()
 
 	ssd1309_UpdateScreen();
 	*/
-
-
 	return (uint8_t)detected_color;
 }
 
@@ -154,7 +151,6 @@ bool check_colors()
 	{
 		return false;
 	}
-
 	return true;
 }
 

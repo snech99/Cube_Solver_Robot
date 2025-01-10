@@ -16,8 +16,6 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-
-
 int config_serial(int*);
 int fork_and_send(int[54], int*, char*);
 
