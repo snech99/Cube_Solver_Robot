@@ -18,8 +18,8 @@ int main(int argc, char *argv[])
 
   if(config_serial(&serial_port) != 0)
   {
-      printf("Error in tty config!\n");
-      return 1;
+    printf("Error in tty config\n");
+    return 1;
   };
 
   int cube_buf [54] = {};
@@ -104,7 +104,7 @@ int main(int argc, char *argv[])
         case '3': pos = 0;
                   if(cube_buf[0] == 0)
                   {
-                      printf("There is no Cube or err in scanning!\n");
+                      printf("There is no Cube or Error during the scan\n");
                       break;
                   }
 
@@ -205,7 +205,7 @@ int main(int argc, char *argv[])
                   break;
       }
     }
-    usleep(1000*100); 
+    //usleep(1000*100); 
   }
 
   close(serial_port);

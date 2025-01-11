@@ -6,8 +6,6 @@ void child_status (int status)
 	//Normale Terminierung
 	if (WIFEXITED(status)==1)
 	{
-		//printf("Kind normal terminiert.\n");
-		//printf("Rückgabewert: %d\n",WEXITSTATUS(status));
 	}
 	//Abnormale Terminierung
 	else if (WIFSIGNALED(status)==1) 
@@ -97,8 +95,16 @@ int fork_and_send (int array[54], int *erg, char* name)
 							}
 							break;
 						}
-						erg[idx] = num;
-						idx++;
+
+						if(idx < 1024)
+						{
+							erg[idx] = num;
+							idx++;
+						}		
+						else
+						{
+							printf("To many numbers where send by Python-Script!");
+						}				
 					}
 
 					close(fd);	
