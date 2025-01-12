@@ -1,3 +1,10 @@
+/*
+*   Gerrit Hinrichs 01.2025
+*   github.com/snech99
+*
+*   Cube_Solver_Robot
+*   main file for the Controller with super-loop
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include "board.h"
@@ -31,6 +38,7 @@ volatile int32_t PWM_flanke_count = 250;
 volatile uint32_t PWM_frequenz = PWM_FREQUENZ;
 volatile uint32_t PWM_ramp_time = RAMP_LONG;
 
+// Timer for PWM-Ramp
 void TIMER1_CALLBACK_RAMPE(uint32_t flags)
 {
 	if (pwm_ms_count < (PWM_ramp_time-1))
@@ -65,6 +73,7 @@ void TIMER1_CALLBACK_RAMPE(uint32_t flags)
 	}
 }
 
+// Timer to debounce the buttons
 void TIMER0_ISR_RESET_CALLBACK(uint32_t flags)
 {
 
@@ -97,6 +106,7 @@ void TIMER0_ISR_RESET_CALLBACK(uint32_t flags)
 	CTIMER_StopTimer(CTIMER0);
 }
 
+// General delay Timer
 void Busy_Timer(uint32_t flags)
 {
 	pwm_servo_busy_flag = false;
@@ -167,6 +177,7 @@ extern "C" void GPIO1_IRQHANDLER(void)
 	GPIO_GpioClearInterruptFlags(GPIO1, 1<<INTERUPT_SENSOR_PIN);
 }
 
+// IRQN for the Buttons
 extern "C" void GPIO2_IRQHANDLER(void)
 {
 	uint32_t hit_flag = GPIO_GpioGetInterruptFlags(GPIO2);
@@ -213,17 +224,20 @@ extern "C" void GPIO3_IRQHANDLER(void)
 	GPIO_GpioClearInterruptFlags(NULL_TRIGGER_GPIO, 1<<NULL_TRIGGER_PIN);
 }
 
+// returns a "random" number
 uint8_t get_rand_num()
 {
     srand(SysTick->VAL%65535);
     return (rand()%12 + 1);
 }
 
+// Interrupt for SysTick
 extern "C" void SysTick_Handler(void)
 {
 	tick_count++;
 }
 
+// Calculates the time needed for a specific function
 uint32_t calc_time_ms()
 {
 	uint32_t erg = 0;
@@ -280,7 +294,8 @@ int main(void)
 
 	while(true)
 	{
-	   super_machine();
+		// State-Machine
+		super_machine();
 	}
     return 0 ;
 }

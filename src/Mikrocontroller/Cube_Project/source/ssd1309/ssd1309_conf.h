@@ -1,8 +1,8 @@
-/*
- * ssd1309_conf.h
+/**
+ * This Library was originally written by Olivier Van den Eede (4ilo) in 2016.
+ * Some refactoring was done and SPI support was added by Aleksander Alekseev (afiskon) in 2018.
  *
- *  Created on: 10.10.2024
- *      Author: gerri
+ * https://github.com/afiskon/stm32-ssd1306
  */
 
 #ifndef __SSD1309_CONF_H__
@@ -16,22 +16,6 @@
 #if defined(SSD1309_USE_I2C)
 #define SSD1309_I2C_ADDR        (0x3C)
 #endif
-
-// SPI Configuration
-//#define SSD1309_SPI_PORT        hspi1
-//#define SSD1309_CS_Port         OLED_CS_GPIO_Port
-//#define SSD1309_CS_Pin          OLED_CS_Pin
-//#define SSD1309_DC_Port         OLED_DC_GPIO_Port
-//#define SSD1309_DC_Pin          OLED_DC_Pin
-//#define SSD1309_Reset_Port      OLED_Res_GPIO_Port
-//#define SSD1309_Reset_Pin       OLED_Res_Pin
-
-// Mirror the screen if needed
-// #define SSD1309_MIRROR_VERT
-// #define SSD1309_MIRROR_HORIZ
-
-// Set inverse color if needed
-// # define SSD1309_INVERSE_COLOR
 
 // Include only needed fonts
 #define SSD1309_INCLUDE_FONT_6x8

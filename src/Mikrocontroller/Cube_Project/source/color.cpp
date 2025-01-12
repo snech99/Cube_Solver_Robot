@@ -1,12 +1,15 @@
 /*
- * color.cpp
- *
- *  Created on: 08.10.2024
- *      Author: gerri
- */
+*   Gerrit Hinrichs 01.2025
+*   github.com/snech99
+*
+*   Cube_Solver_Robot
+*   read and interpret the colors
+*/
+
 #include "Cube_Project.h"
 #include "Adafruit_TCS34725.h"
 
+// returns the color based on the RGB value
 color_c detect_color(uint16_t red, uint16_t green, uint16_t blue, uint16_t clear)
 {
 	int sum = green + blue;
@@ -42,17 +45,12 @@ color_c detect_color(uint16_t red, uint16_t green, uint16_t blue, uint16_t clear
 	return c_yellow;
 }
 
+// reading of the RGB value and returning the color
 uint8_t get_color()
 {
     uint16_t r_raw, g_raw, b_raw, c_raw;
     color_c detected_color;
 	color_busy_flag = true;
-
-	char buf_5[5] = {};
-	char buf_6[5] = {};
-	char buf_7[5] = {};
-
-	char erg_c[2] = {};
 
 	tcs.write8(TCS34725_PERS, TCS34725_PERS_NONE);
 	tcs.setInterrupt(true);
@@ -68,6 +66,11 @@ uint8_t get_color()
 	}
 
 	/*
+	char buf_5[5] = {};
+	char buf_6[5] = {};
+	char buf_7[5] = {};
+	char erg_c[2] = {};
+
 	itoa(r_raw,buf_5,10);
 	itoa(g_raw,buf_6,10);
 	itoa(b_raw,buf_7,10);
@@ -94,6 +97,7 @@ uint8_t get_color()
 	return (uint8_t)detected_color;
 }
 
+// checks the scanned colors (counting)
 bool check_colors()
 {
 	uint8_t count_white = 0;

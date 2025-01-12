@@ -1,3 +1,10 @@
+/*
+*   Gerrit Hinrichs 01.2025
+*   github.com/snech99
+*
+*   Cube_Solver_Robot
+*   interprets the UART-Command send by the external_PC
+*/
 #include "Cube_Project.h"
 
 bool check_blue(uint8_t*);
@@ -8,7 +15,7 @@ bool check_send_cube (uint16_t *);
 bool check_moves (uint16_t *);
 bool check_change (uint16_t *);
 
-
+// function which gets the UART message and interprets it
 message get_command_and_data (uint8_t *read_array)
 {
 	message msg;
@@ -24,7 +31,6 @@ message get_command_and_data (uint8_t *read_array)
     	string_pos_rx++;
         string_pos_command++;
     }
-
 
     while(read_array[string_pos_rx] != '%')
     {
@@ -66,12 +72,6 @@ message get_command_and_data (uint8_t *read_array)
     	return msg;
     }
 
-    if (check_moves(command_string))
-    {
-       	msg.m_command = moves;
-       	return msg;
-    }
-
     if (check_change(command_string))
 	{
 		msg.m_command = change;
@@ -81,6 +81,7 @@ message get_command_and_data (uint8_t *read_array)
     return msg;
 }
 
+// check for command read_color
 bool check_read_color(uint16_t* array)
 {
 	uint8_t test_read[10] = {'r','e','a','d','_','c','o','l','o','r'};
@@ -95,6 +96,7 @@ bool check_read_color(uint16_t* array)
 	return true;
 }
 
+// check for command random moves
 bool check_random(uint16_t* array)
 {
 	uint8_t test_read[6] = {'r','a','n','d','o','m'};
@@ -109,6 +111,7 @@ bool check_random(uint16_t* array)
 	return true;
 }
 
+// check for command solve
 bool check_solve(uint16_t* array)
 {
 	uint8_t test_read[5] = {'s','o','l','v','e'};
@@ -123,6 +126,7 @@ bool check_solve(uint16_t* array)
 	return true;
 }
 
+// check for command send_cube
 bool check_send_cube(uint16_t* array)
 {
 	uint8_t test_read[9] = {'s','e','n','d','_','c','u','b','e'};
@@ -137,20 +141,7 @@ bool check_send_cube(uint16_t* array)
 	return true;
 }
 
-bool check_moves(uint16_t* array)
-{
-	uint8_t test_read[5] = {'m','o','v','e','s'};
-
-	for (int i=0; i<5; i++)
-	{
-		if(test_read[i] != array[i])
-		{
-			return false;
-		}
-	}
-	return true;
-}
-
+// check for command change cube
 bool check_change(uint16_t* array)
 {
 	uint8_t test_read[6] = {'c','h','a','n','g','e'};

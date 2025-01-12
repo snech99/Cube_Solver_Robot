@@ -1,3 +1,10 @@
+/*
+*   Gerrit Hinrichs 01.2025
+*   github.com/snech99
+*
+*   Cube_Solver_Robot
+*   Header for the USB/UART configuration
+*/
 #ifndef _SERIAL_H
 #define _SERIAL_H
 
@@ -8,10 +15,10 @@
 #include <stdlib.h>
 
 // Linux headers
-#include <fcntl.h> // Contains file controls like O_RDWR
-#include <errno.h> // Error integer and strerror() function
-#include <termios.h> // Contains POSIX terminal control definitions
-#include <unistd.h> // write(), read(), close()
+#include <fcntl.h>
+#include <errno.h> 
+#include <termios.h> 
+#include <unistd.h> 
 #include <sys/wait.h>
 #include <sys/stat.h>
 #include <sys/types.h>

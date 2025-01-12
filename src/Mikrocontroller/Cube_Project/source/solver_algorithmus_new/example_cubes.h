@@ -3,8 +3,6 @@
 *   06.2024
 *
 * 	example cubes
-*	order of the sides are irrelevant, but each side must stick together
-*	(README for more information)
 */
 #include "cube.h"
 

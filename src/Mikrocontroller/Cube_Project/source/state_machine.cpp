@@ -1,3 +1,10 @@
+/*
+*   Gerrit Hinrichs 01.2025
+*   github.com/snech99
+*
+*   Cube_Solver_Robot
+*   State-Machine and all important functions
+*/
 #include "Cube_Project.h"
 #include "state_machine.h"
 #include "Adafruit_TCS34725.h"
@@ -19,6 +26,7 @@ uint8_t move_count = 0;
 
 uint8_t cube_message[61];
 
+// State-Machine struct with all combinations
 State_Transition transitionTable[] =
 {
 		{config, Taster_T_L, idle_auto, back_to_auto},
@@ -43,6 +51,7 @@ State_Transition transitionTable[] =
 		{idle_man, msg_change, idle_man, man_to_change_Handler},
 };
 
+// State-Machine: from config to external_PC
 void config_to_man_Handler(void)
 {
 	manual_state_flag = 1;
@@ -74,6 +83,7 @@ void config_to_man_Handler(void)
 	ssd1309_UpdateScreen();
 }
 
+// State-Machine: from automatic to random
 void auto_to_random_Handler(void)
 {
 	uint8_t erg = 0;
@@ -112,6 +122,7 @@ void auto_to_random_Handler(void)
 	ssd1309_UpdateScreen();
 }
 
+// State-Machine: from automatic to Scan Cube
 void auto_to_read_color_Handler(void)
 {
 	GPIO_PinWrite(GPIO2,LED_SWITCH_PIN, 1);
@@ -209,6 +220,7 @@ void auto_to_read_color_Handler(void)
 	ssd1309_UpdateScreen();
 }
 
+// State-Machine: from automatic to solve
 void auto_to_solve_Handler(void)
 {
 	char buf_1[] = "fast";
@@ -253,6 +265,7 @@ void auto_to_solve_Handler(void)
 	}
 }
 
+// State-Machine: from automatic to fast
 void solve_to_fast_Handler(void)
 {
 	char print_moves_num [4] = {};
@@ -329,6 +342,7 @@ void solve_to_fast_Handler(void)
 	ssd1309_UpdateScreen();
 }
 
+// State-Machine: from automatic to slow
 void solve_to_slow_Handler(void)
 {
 	char print_moves_num [4] = {};
@@ -419,6 +433,7 @@ void solve_to_slow_Handler(void)
 	ssd1309_UpdateScreen();
 }
 
+// State-Machine: from automatic to change Cube
 void auto_to_change_Handler (void)
 {
 	char buf_1[] = "Change done";
@@ -452,6 +467,7 @@ void auto_to_change_Handler (void)
 	ssd1309_UpdateScreen();
 }
 
+// State-Machine: return from function to automatic
 void back_to_auto(void)
 {
 	char buf_1[] = "Random moves";
@@ -477,6 +493,7 @@ void back_to_auto(void)
 	ssd1309_UpdateScreen();
 }
 
+// State-Machine: from external_PC to random
 void man_to_random_Handler(void)
 {
 	uint8_t erg = 0;
@@ -516,6 +533,7 @@ void man_to_random_Handler(void)
 	config_to_man_Handler();
 }
 
+// State-Machine: from external_PC to Scan Cube
 void man_to_read_color_Handler(void)
 {
 	GPIO_PinWrite(GPIO2,LED_SWITCH_PIN, 1);
@@ -621,6 +639,7 @@ void man_to_read_color_Handler(void)
 	ssd1309_UpdateScreen();
 }
 
+// State-Machine: from external_PC to send Cube
 void man_to_send_cube_Handler(void)
 {
 	cube_message[0] = '$';
@@ -640,6 +659,7 @@ void man_to_send_cube_Handler(void)
 	LPUART_WriteBlocking(LPUART2_PERIPHERAL, cube_message, sizeof(cube_message));
 }
 
+// State-Machine: from external_PC to solve
 void man_to_solve_Handler(void)
 {
 	char print_moves_num [4] = {};
@@ -713,6 +733,7 @@ void man_to_solve_Handler(void)
 	ssd1309_UpdateScreen();
 }
 
+// State-Machine: from external_PC to change Cube
 void man_to_change_Handler(void)
 {
 	char buf_1[] = "Change done";
@@ -743,7 +764,7 @@ void man_to_change_Handler(void)
 	config_to_man_Handler();
 }
 
-
+// Function which checks for a new event (Button or Message)
 Event_t get_new_Event(void)
 {
 	if(SW_flag_TL)
@@ -820,6 +841,7 @@ Event_t get_new_Event(void)
 	return default_event;
 }
 
+// Function which checks for a suitable State and Event
 void runStateMachine(Event_t event)
 {
 	uint8_t busy_msg[1] = {1};
@@ -841,6 +863,7 @@ void runStateMachine(Event_t event)
     }
 }
 
+// Function called in the super-loop
 void super_machine()
 {
 	Event_t currentEvent = get_new_Event();

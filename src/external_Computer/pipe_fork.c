@@ -1,25 +1,33 @@
+/*
+*   Gerrit Hinrichs 01.2025
+*   github.com/snech99
+*
+*   Cube_Solver_Robot
+*   fork() for the Python-Script and Inter-Processs-Communication (IPC)
+*/
+
 #include "serial.h"
 
-//Funktion zum Auswerten des Status von wait()
+// function to get the child-status from fork()
 void child_status (int status)
 {						
-	//Normale Terminierung
 	if (WIFEXITED(status)==1)
 	{
 	}
-	//Abnormale Terminierung
+
 	else if (WIFSIGNALED(status)==1) 
 	{
-		printf("Kind abnormal terminiert.\n");
-		printf("Signalnummer: %d\n",WTERMSIG(status));
+		printf("abnormal termination\n");
+		printf("Signalnumber: %d\n",WTERMSIG(status));
 	}
-	//Sonstige unbekannte Terminierung
+
 	else 
 	{
-		printf("Unbekannte Terminierung");
+		printf("unknown termination\n");
 	}
 }
 
+// fork for Python-Script and IPC
 int fork_and_send (int array[54], int *erg, char* name)
 {
 	int fd;
@@ -29,6 +37,7 @@ int fork_and_send (int array[54], int *erg, char* name)
 	int ok = 1;
 	int idx = 0;
 
+	// open FIFO
     if (mkfifo(myfifo, 0666) == -1)
     {
         if (errno != EEXIST)
@@ -42,18 +51,19 @@ int fork_and_send (int array[54], int *erg, char* name)
 
 	switch (childpid)
 	{
-		case -1:	perror("forken:");   //Fehlerbehandlung fork
+		case -1:	perror("forken:");  
 					return 1;
 
-		//Kindprozess	 
+		// child Process 
 		case  0:	if ( execlp("python3", "python3", name, NULL) == -1)
 					{
 						perror("exec:");
 					}	
 					exit(EXIT_SUCCESS);
 
-		//Elternprozess
-		default:	fd = open(myfifo, O_WRONLY);
+		// parent Process
+		default:	// write to the FIFO
+					fd = open(myfifo, O_WRONLY);
 					if (fd == -1) 
 					{
 						perror("open");
@@ -68,6 +78,7 @@ int fork_and_send (int array[54], int *erg, char* name)
 					}
 					close(fd);
 
+					// read the solution from the FIFO (max 1024 Integer)
 					fd = 0;
 					fd = open(myfifo, O_RDONLY);
 					if (fd == -1) 
@@ -81,7 +92,6 @@ int fork_and_send (int array[54], int *erg, char* name)
 						int num;
 						ssize_t bytes_read = read(fd, &num, sizeof(num));
 
-						// Wenn weniger als 4 Bytes gelesen wurden, ist das Ende der FIFO erreicht
 						if (bytes_read < sizeof(num)) 
 						{
 							if (bytes_read == 0) 
@@ -90,7 +100,7 @@ int fork_and_send (int array[54], int *erg, char* name)
 							} 
 							else 
 							{
-								printf("Unvollständige Daten empfangen, Abbruch.\n");
+								printf("Incomplete data received, abort\n");
 								ok = 0;
 							}
 							break;

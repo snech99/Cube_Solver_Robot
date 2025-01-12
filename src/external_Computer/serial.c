@@ -1,3 +1,11 @@
+/*
+*   Gerrit Hinrichs 01.2025
+*   github.com/snech99
+*
+*   Cube_Solver_Robot
+*   file for the USB/UART configuration
+*/
+
 #include "serial.h"
 
 int config_serial(int *com)

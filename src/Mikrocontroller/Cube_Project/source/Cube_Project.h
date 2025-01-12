@@ -1,9 +1,10 @@
 /*
- * Cube_Project.h
- *
- *  Created on: 05.10.2024
- *      Author: gerri
- */
+*   Gerrit Hinrichs 01.2025
+*   github.com/snech99
+*
+*   Cube_Solver_Robot
+*   Header with defines and important structs
+*/
 #include "fsl_common.h"
 #include "pin_mux.h"
 #include "peripherals.h"
@@ -77,8 +78,6 @@ enum command
 	solve = 2,
 	read_color = 3,
 	send_cube = 4,
-	moves = 5,
-	menu = 6,
 	change = 7,
 	err = 99,
 };
@@ -139,4 +138,4 @@ uint32_t calc_time_ms();
 void config_motor();
 
 
-#endif /* CUBE_PROJECT_H_ */
+#endif

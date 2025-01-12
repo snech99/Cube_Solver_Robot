@@ -1,3 +1,10 @@
+/*
+*   Gerrit Hinrichs 01.2025
+*   github.com/snech99
+*
+*   Cube_Solver_Robot
+*   Header State-Machine
+*/
 #ifndef STATE_MACHINE_H_
 #define STATE_MACHINE_H_
 
@@ -56,4 +63,4 @@ void super_machine();
 
 extern Event_t new_event;
 
-#endif /* STATE_MACHINE_H_ */
+#endif

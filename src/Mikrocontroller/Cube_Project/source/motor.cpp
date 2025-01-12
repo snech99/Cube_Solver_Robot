@@ -1,12 +1,13 @@
 /*
- * motor.cpp
- *
- *  Created on: 29.10.2024
- *      Author: gerri
- */
-
+*   Gerrit Hinrichs 01.2025
+*   github.com/snech99
+*
+*   Cube_Solver_Robot
+*   Functions for the Servo and Steppers
+*/
 #include "Cube_Project.h"
 
+// Configuration for the six Steppers
 void config_motor()
 {
 	uint8_t config_count = 0;
@@ -117,6 +118,7 @@ void config_motor()
 	}
 }
 
+// General movement of the Steppers
 void move_motor(uint8_t num, uint8_t flank)
 {
 	pwm_busy_flag = true;
@@ -196,6 +198,7 @@ void move_motor(uint8_t num, uint8_t flank)
 	GPIO_PinWrite(EN_BLUE_GPIO, EN_BLUE_PIN, 0);
 }
 
+// General movement of the Servo
 void move_servo(uint8_t per)
 {
 	PWM_UpdatePwmDutycycle(FLEXPWM0_PERIPHERAL, FLEXPWM0_SERVO_PWM,
@@ -215,6 +218,7 @@ void move_servo(uint8_t per)
 	}
 }
 
+// function with moves used in the scanning function
 void change_sides(uint8_t num)
 {
 	if(num <= 2)

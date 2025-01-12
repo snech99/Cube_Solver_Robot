@@ -1,6 +1,8 @@
 /*
 *	Rubiks´s Cube solver by Gerrit Hinrichs 
-*   06.2024
+*   11.2024
+*
+* 	solving the first layer
 */
 #include "game.h"
 #include "cube.h"

@@ -1,9 +1,20 @@
+
+#
+#  Gerrit Hinrichs 01.2025
+#  github.com/snech99
+#
+#  Cube_Solver_Robot
+#  Python-Script for the Solving-Algorithm
+#  Inter-Process-Communication (IPC) with C Program
+#
+
 import os
 import struct
 import random
 
 FIFO_NAME = "myfifo"
 
+# read from the FIFO (IPC)
 def read_from_fifo():
     if not os.path.exists(FIFO_NAME):
         print("FIFO doesn't exist.")
@@ -22,24 +33,20 @@ def read_from_fifo():
             num = struct.unpack('i', data)[0]
             received_data.append(num)  
 
-    #print(received_data)
-
+# write the solution to the FIFO (IPC)
 def write_to_fifo(array):
     with open(FIFO_NAME, 'wb') as fifo:
         for num in array:
             fifo.write(struct.pack('i', num))
 
-#Hier die Lösung einfügen
-#Rückgabe maximal 1024 Integer-Werte
+# Write your own Solver here (max. 1024 moves)
 def solver():
-    #Hier Lösungs Algorithmus
     
-    #Random Array mit 1024 Zuegen
+    #random array with 1024 moves
     erg=[random.randint(1,12) for x in range(1024)]
-
-    #erg = [1,2,3,4,5,6,7,8,9,10,11,12]
     return erg
 
+# main function
 if __name__ == "__main__":
     read_from_fifo()
     erg = solver()
