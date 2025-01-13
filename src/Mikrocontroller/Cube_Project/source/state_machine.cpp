@@ -855,4 +855,5 @@ void runStateMachine(Event_t event)
 void super_machine()
 {
 	Event_t currentEvent = get_new_Event();
-    runStateMachine(currentEvent);}
+    runStateMachine(currentEvent);
+}

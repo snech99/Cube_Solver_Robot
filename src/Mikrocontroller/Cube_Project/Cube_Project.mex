@@ -1119,7 +1119,7 @@
                         <struct name="ctimerConfig">
                            <setting name="mode" value="kCTIMER_TimerMode"/>
                            <setting name="clockSource" value="FunctionClock"/>
-                           <setting name="clockSourceFreq" value="ClocksTool_DefaultInit"/>
+                           <setting name="clockSourceFreq" value="BOARD_BootClockFRO96M"/>
                            <setting name="timerPrescaler" value="12"/>
                         </struct>
                         <setting name="EnableTimerInInit" value="false"/>
@@ -1129,7 +1129,7 @@
                               <setting name="matchChannel" value="kCTIMER_Match_0"/>
                               <setting name="matchValueStr" value="100ms"/>
                               <setting name="enableCounterReset" value="true"/>
-                              <setting name="enableCounterStop" value="false"/>
+                              <setting name="enableCounterStop" value="true"/>
                               <setting name="outControl" value="kCTIMER_Output_NoAction"/>
                               <setting name="outPinInitValue" value="low"/>
                               <setting name="enableInterrupt" value="true"/>
@@ -1144,60 +1144,6 @@
                            </struct>
                            <setting name="callback" value="kCTIMER_SingleCallback"/>
                            <setting name="singleCallback" value="TIMER0_ISR_RESET_CALLBACK"/>
-                        </struct>
-                     </config_set>
-                  </instance>
-                  <instance name="LPSPI1" uuid="6552cac1-db15-4e3d-8b9f-3f11a8e60b10" type="lpspi" type_id="lpspi_6e21a1e0a09f0a012d683c4f91752db8" mode="transfer" peripheral="LPSPI1" enabled="false" comment="" custom_name_enabled="false" editing_lock="false">
-                     <config_set name="transfer">
-                        <struct name="config">
-                           <struct name="transmitBuffer">
-                              <setting name="init" value="true"/>
-                           </struct>
-                           <struct name="receiveBuffer">
-                              <setting name="init" value="true"/>
-                           </struct>
-                           <setting name="dataSize" value="10"/>
-                           <setting name="enableTransferStruct" value="defined"/>
-                           <set name="flags">
-                              <selected>
-                                 <id>kLPSPI_MasterPcs1</id>
-                              </selected>
-                           </set>
-                           <struct name="callback">
-                              <setting name="name" value="SPI_Callback"/>
-                              <setting name="userData" value=""/>
-                           </struct>
-                        </struct>
-                     </config_set>
-                     <config_set name="main">
-                        <setting name="mode" value="kLPSPI_Master"/>
-                        <setting name="clockSource" value="LpspiClock"/>
-                        <setting name="clockSourceFreq" value="ClocksTool_DefaultInit"/>
-                        <struct name="master">
-                           <setting name="baudRate" value="500000"/>
-                           <setting name="bitsPerFrame" value="8"/>
-                           <setting name="cpol" value="kLPSPI_ClockPolarityActiveHigh"/>
-                           <setting name="cpha" value="kLPSPI_ClockPhaseFirstEdge"/>
-                           <setting name="direction" value="kLPSPI_MsbFirst"/>
-                           <setting name="pcsToSckDelayInNanoSec" value="1000"/>
-                           <setting name="lastSckToPcsDelayInNanoSec" value="1000"/>
-                           <setting name="betweenTransferDelayInNanoSec" value="1000"/>
-                           <setting name="whichPcs" value="kLPSPI_Pcs1"/>
-                           <setting name="pcsActiveHighOrLow" value="kLPSPI_PcsActiveLow"/>
-                           <setting name="pinCfg" value="kLPSPI_SdiInSdoOut"/>
-                           <setting name="dataOutConfig" value="kLpspiDataOutRetained"/>
-                           <setting name="enableInputDelay" value="false"/>
-                        </struct>
-                        <setting name="allPcsPolarityEnable" value="false"/>
-                        <struct name="allPcsPolarity">
-                           <setting name="kLPSPI_Pcs0Active" value="kLPSPI_PcsActiveLow"/>
-                           <setting name="kLPSPI_Pcs2Active" value="kLPSPI_PcsActiveLow"/>
-                           <setting name="kLPSPI_Pcs3Active" value="kLPSPI_PcsActiveLow"/>
-                        </struct>
-                        <struct name="interrupt_priority">
-                           <setting name="IRQn" value="LPSPI1_IRQn"/>
-                           <setting name="enable_priority" value="false"/>
-                           <setting name="priority" value="0"/>
                         </struct>
                      </config_set>
                   </instance>
@@ -1506,27 +1452,6 @@
                            </struct>
                            <setting name="callback" value="kCTIMER_SingleCallback"/>
                            <setting name="singleCallback" value="Busy_Timer"/>
-                        </struct>
-                     </config_set>
-                  </instance>
-                  <instance name="WWDT0" uuid="09e65680-1b4f-4488-9af7-ba2a2500c726" type="wwdt" type_id="wwdt_4afd1b7f7bc88fc51c044e9c38c1808c" mode="interrupt_mode" peripheral="WWDT0" enabled="false" comment="" custom_name_enabled="false" editing_lock="false">
-                     <config_set name="general">
-                        <struct name="wwdt_config">
-                           <setting name="clockSource" value="FunctionClock"/>
-                           <setting name="clockSourceFreq" value="BOARD_BootClockFRO96M"/>
-                           <setting name="enableWwdt" value="true"/>
-                           <setting name="enableWatchdogProtect" value="false"/>
-                           <setting name="enableLockOscillator" value="false"/>
-                           <setting name="timeoutValue_input" value="250 ms"/>
-                           <setting name="windowEnable" value="false"/>
-                           <setting name="warningValue_input" value="0"/>
-                        </struct>
-                        <struct name="interrupt">
-                           <setting name="IRQn" value="WWDT0_IRQn"/>
-                           <setting name="enable_interrrupt" value="enabled"/>
-                           <setting name="enable_priority" value="false"/>
-                           <setting name="priority" value="0"/>
-                           <setting name="enable_custom_name" value="false"/>
                         </struct>
                      </config_set>
                   </instance>

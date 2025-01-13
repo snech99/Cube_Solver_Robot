@@ -76,7 +76,6 @@ void TIMER1_CALLBACK_RAMPE(uint32_t flags)
 // Timer to debounce the buttons
 void TIMER0_ISR_RESET_CALLBACK(uint32_t flags)
 {
-
 	if(GPIO_PinRead(GPIO2, TASTER_T_L) == 0)
 	{
 		SW_flag_TL = true;
@@ -102,8 +101,8 @@ void TIMER0_ISR_RESET_CALLBACK(uint32_t flags)
 	GPIO_GpioClearInterruptFlags(GPIO2, 1<<TASTER_B_L);
 	GPIO_GpioClearInterruptFlags(GPIO2, 1<<TASTER_B_R);
 
-	EnableIRQ(GPIO2_IRQN);
 	CTIMER_StopTimer(CTIMER0);
+	EnableIRQ(GPIO2_IRQN);
 }
 
 // General delay Timer
@@ -269,7 +268,7 @@ int main(void)
     SysTick_Config(SystemCoreClock/1000);
 
     GPIO_PinWrite(MOTOR_EN_GPIO, MOTOR_EN_PIN, M_ENABLE);
-	config_motor();
+	//config_motor();
 
     ssd1309_Fill(Black);
     ssd1309_UpdateScreen();

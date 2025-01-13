@@ -285,7 +285,7 @@ instance:
     - ctimerConfig:
       - mode: 'kCTIMER_TimerMode'
       - clockSource: 'FunctionClock'
-      - clockSourceFreq: 'ClocksTool_DefaultInit'
+      - clockSourceFreq: 'BOARD_BootClockFRO96M'
       - timerPrescaler: '12'
     - EnableTimerInInit: 'false'
     - matchChannels:
@@ -294,7 +294,7 @@ instance:
         - matchChannel: 'kCTIMER_Match_0'
         - matchValueStr: '100ms'
         - enableCounterReset: 'true'
-        - enableCounterStop: 'false'
+        - enableCounterStop: 'true'
         - outControl: 'kCTIMER_Output_NoAction'
         - outPinInitValue: 'low'
         - enableInterrupt: 'true'
@@ -316,7 +316,7 @@ const ctimer_config_t CTIMER0_config = {
 const ctimer_match_config_t CTIMER0_Match_0_config = {
   .matchValue = 799999,
   .enableCounterReset = true,
-  .enableCounterStop = false,
+  .enableCounterStop = true,
   .outControl = kCTIMER_Output_NoAction,
   .outPinInitState = false,
   .enableInterrupt = true
