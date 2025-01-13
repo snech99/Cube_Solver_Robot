@@ -17,6 +17,7 @@ State_t CURRENT_STATE = config;
 message msg;
 int move_array_final [200] = {};
 char buf_back[] = "back";
+uint8_t busy_msg[1] = {1};
 
 int cube_array[54] = {};
 
@@ -58,7 +59,7 @@ void config_to_man_Handler(void)
 
 	char buf_1[] = "1:Scan Cube";
 	char buf_2[] = "2:Send Cube to PC";
-	char buf_5[] = "5:Move Cube and Solve";
+	char buf_5[] = "5:Solve";
 	char buf_6[] = "6:20 Random moves";
 	char buf_7[] = "7:Change Cube";
 
@@ -117,7 +118,7 @@ void auto_to_random_Handler(void)
 
 	ssd1309_Fill(Black);
 	ssd1309_UpdateScreen();
-	ssd1309_SetCursor(90,51);
+	ssd1309_SetCursor(97,51);
 	ssd1309_WriteString(buf_back,Font_7x10, White);
 	ssd1309_UpdateScreen();
 }
@@ -211,11 +212,11 @@ void auto_to_read_color_Handler(void)
 	}
 	else
 	{
-		ssd1309_SetCursor(30,20);
+		ssd1309_SetCursor(25,20);
 		ssd1309_WriteString(buf_f, Font_11x18, White);
 	}
 
-	ssd1309_SetCursor(90,51);
+	ssd1309_SetCursor(97,51);
 	ssd1309_WriteString(buf_back,Font_7x10, White);
 	ssd1309_UpdateScreen();
 }
@@ -240,7 +241,7 @@ void auto_to_solve_Handler(void)
 		ssd1309_SetCursor(20,20);
 		ssd1309_WriteString(buf_5, Font_11x18, White);
 
-		ssd1309_SetCursor(90,51);
+		ssd1309_SetCursor(97,51);
 		ssd1309_WriteString(buf_back,Font_7x10, White);
 
 		ssd1309_UpdateScreen();
@@ -258,7 +259,7 @@ void auto_to_solve_Handler(void)
 		ssd1309_SetCursor(2,50);
 		ssd1309_WriteString(buf_2,Font_7x10, White);
 
-		ssd1309_SetCursor(90,51);
+		ssd1309_SetCursor(97,51);
 		ssd1309_WriteString(buf_back,Font_7x10, White);
 
 		ssd1309_UpdateScreen();
@@ -336,7 +337,7 @@ void solve_to_fast_Handler(void)
 	ssd1309_SetCursor(65+offset,40);
 	ssd1309_WriteString(s_print, Font_7x10, White);
 
-	ssd1309_SetCursor(90,53);
+	ssd1309_SetCursor(97,53);
 	ssd1309_WriteString(buf_back,Font_7x10, White);
 
 	ssd1309_UpdateScreen();
@@ -427,7 +428,7 @@ void solve_to_slow_Handler(void)
 	ssd1309_SetCursor(65+offset,40);
 	ssd1309_WriteString(s_print, Font_7x10, White);
 
-	ssd1309_SetCursor(90,51);
+	ssd1309_SetCursor(97,51);
 	ssd1309_WriteString(buf_back,Font_7x10, White);
 
 	ssd1309_UpdateScreen();
@@ -461,7 +462,7 @@ void auto_to_change_Handler (void)
 
 	config_motor();
 
-	ssd1309_SetCursor(90,51);
+	ssd1309_SetCursor(97,51);
 	ssd1309_WriteString(buf_back,Font_7x10, White);
 
 	ssd1309_UpdateScreen();
@@ -470,10 +471,10 @@ void auto_to_change_Handler (void)
 // State-Machine: return from function to automatic
 void back_to_auto(void)
 {
-	char buf_1[] = "Random moves";
-	char buf_2[] = "Scan Cube";
+	char buf_1[] = "Random";
+	char buf_2[] = "Scan";
 	char buf_3[] = "Solve";
-	char buf_4[] = "Change Cube";
+	char buf_4[] = "Change";
 
     ssd1309_Fill(Black);
     ssd1309_UpdateScreen();
@@ -484,10 +485,10 @@ void back_to_auto(void)
 	ssd1309_SetCursor(2,51);
 	ssd1309_WriteString(buf_2,Font_7x10, White);
 
-	ssd1309_SetCursor(80,3);
+	ssd1309_SetCursor(90,3);
 	ssd1309_WriteString(buf_3,Font_7x10, White);
 
-	ssd1309_SetCursor(65,51);
+	ssd1309_SetCursor(85,51);
 	ssd1309_WriteString(buf_4,Font_7x10, White);
 
 	ssd1309_UpdateScreen();
@@ -500,14 +501,6 @@ void man_to_random_Handler(void)
 	uint8_t last = 0;
 	uint8_t temp = 0;
 	uint8_t pos = 0;
-
-	char buf[] = "random";
-
-	ssd1309_Fill(Black);
-	ssd1309_UpdateScreen();
-	ssd1309_SetCursor(33,20);
-	ssd1309_WriteString(buf, Font_11x18, White);
-	ssd1309_UpdateScreen();
 
 	while(pos < 20)
 	{
@@ -530,6 +523,7 @@ void man_to_random_Handler(void)
 		last = erg;
 	}
 
+	LPUART_WriteBlocking(LPUART2_PERIPHERAL, busy_msg, sizeof(busy_msg));
 	config_to_man_Handler();
 }
 
@@ -542,11 +536,11 @@ void man_to_read_color_Handler(void)
 	char buf_e[] = "error";
 	char buf_f[] = "correct";
 
-	ssd1309_Fill(Black);
-	ssd1309_UpdateScreen();
-	ssd1309_SetCursor(44,20);
+    ssd1309_Fill(Black);
+    ssd1309_UpdateScreen();
+	ssd1309_SetCursor(20,25);
 	ssd1309_WriteString(buf, Font_7x10, White);
-	ssd1309_UpdateScreen();
+    ssd1309_UpdateScreen();
 
 	cube_array [4] = 1;
 	cube_array [13] = 3;
@@ -570,18 +564,6 @@ void man_to_read_color_Handler(void)
 
 	for(uint8_t i=0; i<6; i++)
 	{
-		move_servo(16);
-		for( uint8_t i=0; i<2; i++)
-		{
-			pwm_servo_busy_flag = true;
-			CTIMER_StartTimer(CTIMER2);
-			while(pwm_servo_busy_flag)
-			{
-
-			}
-		}
-
-		PWM_ramp_time = RAMP_SHORT;
 		move_servo(15);
 		for( uint8_t i=0; i<5; i++)
 		{
@@ -593,6 +575,16 @@ void man_to_read_color_Handler(void)
 			}
 		}
 
+		PWM_ramp_time = RAMP_SHORT;
+		for( uint8_t i=0; i<5; i++)
+		{
+			pwm_servo_busy_flag = true;
+			CTIMER_StartTimer(CTIMER2);
+			while(pwm_servo_busy_flag)
+			{
+
+			}
+		}
 		for(uint8_t k=0; k<8; k++)
 		{
 			color = get_color();
@@ -621,7 +613,7 @@ void man_to_read_color_Handler(void)
 
 	ssd1309_Fill(Black);
 	ssd1309_UpdateScreen();
-	ssd1309_SetCursor(28,20);
+	ssd1309_SetCursor(25,20);
 
 	if(!check_colors())
 	{
@@ -637,6 +629,8 @@ void man_to_read_color_Handler(void)
 		ssd1309_WriteString(buf_f, Font_11x18, White);
 	}
 	ssd1309_UpdateScreen();
+
+	LPUART_WriteBlocking(LPUART2_PERIPHERAL, busy_msg, sizeof(busy_msg));
 }
 
 // State-Machine: from external_PC to send Cube
@@ -655,8 +649,9 @@ void man_to_send_cube_Handler(void)
 		cube_message[i] = cube_array[i-6];
 	}
 
-	config_to_man_Handler();
 	LPUART_WriteBlocking(LPUART2_PERIPHERAL, cube_message, sizeof(cube_message));
+	config_to_man_Handler();
+	LPUART_WriteBlocking(LPUART2_PERIPHERAL, busy_msg, sizeof(busy_msg));
 }
 
 // State-Machine: from external_PC to solve
@@ -676,9 +671,6 @@ void man_to_solve_Handler(void)
 	char buf[] = "solving ..";
 
 	ssd1309_Fill(Black);
-	ssd1309_UpdateScreen();
-	ssd1309_SetCursor(30,30);
-	ssd1309_WriteString(buf,Font_11x18, White);
 	ssd1309_UpdateScreen();
 
  	tick_start = tick_count;
@@ -731,6 +723,8 @@ void man_to_solve_Handler(void)
 	ssd1309_WriteString(s_print, Font_7x10, White);
 
 	ssd1309_UpdateScreen();
+
+	LPUART_WriteBlocking(LPUART2_PERIPHERAL, busy_msg, sizeof(busy_msg));
 }
 
 // State-Machine: from external_PC to change Cube
@@ -760,6 +754,8 @@ void man_to_change_Handler(void)
 	GPIO_PinWrite(MOTOR_EN_GPIO, MOTOR_EN_PIN, M_ENABLE);
 
 	config_motor();
+
+	LPUART_WriteBlocking(LPUART2_PERIPHERAL, busy_msg, sizeof(busy_msg));
 
 	config_to_man_Handler();
 }
@@ -844,8 +840,6 @@ Event_t get_new_Event(void)
 // Function which checks for a suitable State and Event
 void runStateMachine(Event_t event)
 {
-	uint8_t busy_msg[1] = {1};
-
     for (uint8_t i = 0; i < sizeof(transitionTable) / sizeof(transitionTable[0]); i++)
     {
         if (transitionTable[i].current_state == CURRENT_STATE && transitionTable[i].event == event)
@@ -853,12 +847,6 @@ void runStateMachine(Event_t event)
             transitionTable[i].action();
             CURRENT_STATE = transitionTable[i].next_state;
             flag_hit_2 = false;
-
-            if(manual_state_flag == 1)
-            {
-            	LPUART_WriteBlocking(LPUART2_PERIPHERAL, busy_msg, sizeof(busy_msg));
-            }
-            return;
         }
     }
 }
@@ -867,5 +855,4 @@ void runStateMachine(Event_t event)
 void super_machine()
 {
 	Event_t currentEvent = get_new_Event();
-    runStateMachine(currentEvent);
-}
+    runStateMachine(currentEvent);}

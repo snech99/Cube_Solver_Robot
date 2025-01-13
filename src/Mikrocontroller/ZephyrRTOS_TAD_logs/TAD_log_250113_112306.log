@@ -1,0 +1,13 @@
+"Task Aware Debugger for GDB" version 11.9.1 (202403060848)
+Copyright 2016-2023 NXP
+==================================
+11:22:41.259 INFO: [ZephyrRTOS] .config file could not be read [C:\Users\gerri\Desktop\Git\Cube_Solver_Robot\src\Mikrocontroller\Cube_Project\Debug\.config (Das System kann die angegebene Datei nicht finden)]
+11:22:41.259 INFO: [TadModel] DSF session ID 3 has started.
+11:22:45.742 INFO: [TadState] TAD state changed: DEBUG_STARTED -> DEBUG_INIT_0 (RESUMED, USER_REQUEST)
+11:22:45.760 INFO: [TadState] TAD state changed: DEBUG_INIT_0 -> DEBUG_INIT_1 (SUSPENDED, SIGNAL)
+11:22:46.742 INFO: [TadState] TAD state changed: DEBUG_INIT_1 -> DEBUG_SUSPENDED (RESUMED, USER_REQUEST)
+11:22:46.775 INFO: [TadState] TAD state changed: DEBUG_SUSPENDED -> DEBUG_SUSPENDED (SUSPENDED, BREAKPOINT)
+11:22:49.677 INFO: [TadState] TAD state changed: DEBUG_SUSPENDED -> DEBUG_RESUMED (RESUMED, USER_REQUEST)
+11:22:55.182 INFO: [TadState] TAD state changed: DEBUG_RESUMED -> READY (SUSPENDED, SIGNAL)
+11:22:57.545 INFO: [TadState] TAD state changed: READY -> DEBUG_RESUMED (RESUMED, USER_REQUEST)
+11:23:06.642 INFO: [TadModel] DSF session ID 3 has ended.

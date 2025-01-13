@@ -767,6 +767,7 @@
                   <clock_output id="Slow_clock.outFreq" value="24 MHz" locked="false" accuracy=""/>
                   <clock_output id="System_clock.outFreq" value="96 MHz" locked="false" accuracy=""/>
                   <clock_output id="UTICK_clock.outFreq" value="1 MHz" locked="false" accuracy=""/>
+                  <clock_output id="WWDT0_clock.outFreq" value="1 MHz" locked="false" accuracy=""/>
                </clock_outputs>
                <clock_settings>
                   <setting id="VDD_CORE" value="voltage_1v1" locked="false"/>
@@ -786,6 +787,7 @@
                   <setting id="MRCC.LPUART0CLKDIV.scale" value="8" locked="false"/>
                   <setting id="MRCC.OSTIMERCLKSEL.sel" value="VBAT.CLK16K_1" locked="false"/>
                   <setting id="SYSCON.AHBCLKDIV.scale" value="1" locked="true"/>
+                  <setting id="WWDT0CLKDIV_HALT" value="Enable" locked="false"/>
                </clock_settings>
                <called_from_default_init>true</called_from_default_init>
             </clock_configuration>
@@ -1504,6 +1506,27 @@
                            </struct>
                            <setting name="callback" value="kCTIMER_SingleCallback"/>
                            <setting name="singleCallback" value="Busy_Timer"/>
+                        </struct>
+                     </config_set>
+                  </instance>
+                  <instance name="WWDT0" uuid="09e65680-1b4f-4488-9af7-ba2a2500c726" type="wwdt" type_id="wwdt_4afd1b7f7bc88fc51c044e9c38c1808c" mode="interrupt_mode" peripheral="WWDT0" enabled="false" comment="" custom_name_enabled="false" editing_lock="false">
+                     <config_set name="general">
+                        <struct name="wwdt_config">
+                           <setting name="clockSource" value="FunctionClock"/>
+                           <setting name="clockSourceFreq" value="BOARD_BootClockFRO96M"/>
+                           <setting name="enableWwdt" value="true"/>
+                           <setting name="enableWatchdogProtect" value="false"/>
+                           <setting name="enableLockOscillator" value="false"/>
+                           <setting name="timeoutValue_input" value="250 ms"/>
+                           <setting name="windowEnable" value="false"/>
+                           <setting name="warningValue_input" value="0"/>
+                        </struct>
+                        <struct name="interrupt">
+                           <setting name="IRQn" value="WWDT0_IRQn"/>
+                           <setting name="enable_interrrupt" value="enabled"/>
+                           <setting name="enable_priority" value="false"/>
+                           <setting name="priority" value="0"/>
+                           <setting name="enable_custom_name" value="false"/>
                         </struct>
                      </config_set>
                   </instance>

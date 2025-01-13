@@ -427,6 +427,7 @@ outputs:
 - {id: Slow_clock.outFreq, value: 24 MHz}
 - {id: System_clock.outFreq, value: 96 MHz}
 - {id: UTICK_clock.outFreq, value: 1 MHz}
+- {id: WWDT0_clock.outFreq, value: 1 MHz}
 settings:
 - {id: VDD_CORE, value: voltage_1v1}
 - {id: CLKOUTDIV_HALT, value: Enable}
@@ -445,6 +446,7 @@ settings:
 - {id: MRCC.LPUART0CLKDIV.scale, value: '8'}
 - {id: MRCC.OSTIMERCLKSEL.sel, value: VBAT.CLK16K_1}
 - {id: SYSCON.AHBCLKDIV.scale, value: '1', locked: true}
+- {id: WWDT0CLKDIV_HALT, value: Enable}
 sources:
 - {id: SCG.FIRC.outFreq, value: 96 MHz}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
@@ -520,6 +522,7 @@ void BOARD_BootClockFRO96M(void)
     CLOCK_SetClockDiv(kCLOCK_DivCTIMER1, 1U);              /* !< Set CTIMER1CLKDIV divider to value 1 */
     CLOCK_SetClockDiv(kCLOCK_DivCTIMER2, 1U);              /* !< Set CTIMER2CLKDIV divider to value 1 */
     CLOCK_SetClockDiv(kCLOCK_DivFRO_HF_DIV, 1U);           /* !< Set FROHFDIV divider to value 1 */
+    CLOCK_SetClockDiv(kCLOCK_DivWWDT0, 1U);                /* !< Set WWDT0CLKDIV divider to value 1 */
     CLOCK_SetClockDiv(kCLOCK_DivLPTMR0, 8U);               /* !< Set LPUART0CLKDIV divider to value 8 */
     CLOCK_SetClockDiv(kCLOCK_DivLPUART2, 1U);              /* !< Set LPUART2CLKDIV divider to value 1 */
     CLOCK_SetClockDiv(kCLOCK_DivLPI2C0, 8U);               /* !< Set LPI2C0CLKDIV divider to value 8 */

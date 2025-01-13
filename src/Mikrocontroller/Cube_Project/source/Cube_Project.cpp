@@ -252,13 +252,14 @@ uint32_t calc_time_ms()
 	return erg;
 }
 
+
 /*
  * @brief   Application entry point.
  */
 int main(void)
 {
 	char buf_1[] = "Automatic (intern)";
-	char buf_2[] = "external PC via USB";
+	char buf_2[] = "external_PC USB";
 	char buf_e[] = "err in Sensor-Config";
 
     BOARD_InitBootPins();
@@ -266,6 +267,9 @@ int main(void)
     BOARD_InitBootPeripherals();
 
     SysTick_Config(SystemCoreClock/1000);
+
+    GPIO_PinWrite(MOTOR_EN_GPIO, MOTOR_EN_PIN, M_ENABLE);
+	config_motor();
 
     ssd1309_Fill(Black);
     ssd1309_UpdateScreen();
@@ -288,9 +292,6 @@ int main(void)
 
     tcs.write8(TCS34725_PERS, TCS34725_PERS_NONE);
     tcs.setInterrupt(true);
-
-    GPIO_PinWrite(MOTOR_EN_GPIO, MOTOR_EN_PIN, M_ENABLE);
-	config_motor();
 
 	while(true)
 	{
