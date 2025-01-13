@@ -3,7 +3,7 @@
 This work was created as part of a project in my mechatronics course at Hochschule Wismar, University of Applied Sciences: Technology, Business and Design. 
 I worked on it together with a friend of mine. 
 
-It's a Robot which can scan and solve a Rubik's Cube. It's possible to take out the Cube and twitch it by yourself. If you don't want to twist it by yourself, we have a mode which will turn it for you randomly with 20 moves. The Robot have two main modes: **Automatic and external_PC**
+It's a Robot which can scan and solve a Rubik's Cube. It's possible to take out the Cube and twitch it by yourself. If you don't want to twist it by yourself, we have a mode which will turn it for you randomly with 20 moves. The Robot have two main modes: **Automatic and external_PC**.
 Those modes are explained in a special PDF which you can find in the Repo.
 
 The automatic mode solves the cube using an algorithm we wrote ourselves. It is based on the manual solution method, as a human would solve it.
