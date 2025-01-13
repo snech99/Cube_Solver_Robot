@@ -179,7 +179,7 @@ void auto_to_read_color_Handler(void)
 			pos_read++;
 			move_motor(1, 125);
 
-			for( uint8_t i=0; i<8; i++)
+			for( uint8_t i=0; i<11; i++)
 			{
 				pwm_servo_busy_flag = true;
 				CTIMER_StartTimer(CTIMER2);
@@ -618,7 +618,6 @@ void man_to_read_color_Handler(void)
 	if(!check_colors())
 	{
 		ssd1309_WriteString(buf_e, Font_11x18, White);
-
 		for(uint8_t i=0; i<54; i++)
 		{
 			cube_array[i] = 0;
@@ -847,6 +846,7 @@ void runStateMachine(Event_t event)
             transitionTable[i].action();
             CURRENT_STATE = transitionTable[i].next_state;
             flag_hit_2 = false;
+            return;
         }
     }
 }

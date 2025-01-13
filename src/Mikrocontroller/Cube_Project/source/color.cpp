@@ -12,36 +12,38 @@
 // returns the color based on the RGB value
 color_c detect_color(uint16_t red, uint16_t green, uint16_t blue, uint16_t clear)
 {
-	int sum = green + blue;
+	int sum_pos = green - blue - red;
+	int sum_red = green + blue;
+
+	if(blue > 2050)
+	{
+		return c_white;
+	}
+
+	if(sum_pos > 0)
+	{
+		if(red < 1200)
+		{
+			return c_green;
+		}
+	}
+
 	if(red < 1500)
 	{
-		if(sum < 1500)
+		if(blue < 850)
 		{
 			return c_red;
 		}
 		else
 		{
-			if(blue < 1000)
-			{
-				return c_green;
-			}
-			else
-			{
-				return c_blue;
-			}
+			return c_blue;
 		}
 	}
 
-	if(green < 2000)
+	if(sum_red < 2700)
 	{
 		return c_orange;
 	}
-
-	if(blue > 2000)
-	{
-		return c_white;
-	}
-
 	return c_yellow;
 }
 
@@ -94,6 +96,7 @@ uint8_t get_color()
 
 	ssd1309_UpdateScreen();
 	*/
+
 	return (uint8_t)detected_color;
 }
 

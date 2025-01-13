@@ -268,7 +268,7 @@ int main(void)
     SysTick_Config(SystemCoreClock/1000);
 
     GPIO_PinWrite(MOTOR_EN_GPIO, MOTOR_EN_PIN, M_ENABLE);
-	//config_motor();
+	config_motor();
 
     ssd1309_Fill(Black);
     ssd1309_UpdateScreen();
