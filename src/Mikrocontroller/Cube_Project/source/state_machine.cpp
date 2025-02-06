@@ -280,6 +280,8 @@ void solve_to_fast_Handler(void)
 	uint32_t time = 0;
 	uint32_t time_ms = 0;
 
+	uint8_t move_now, move_next;
+
 	ssd1309_Fill(Black);
 	ssd1309_UpdateScreen();
 
@@ -287,7 +289,29 @@ void solve_to_fast_Handler(void)
 
 	while(move_array_final[pos] != 0)
 	{
-		move_motor(move_array_final[pos], 250);
+		move_now = move_array_final[pos];
+		move_next = move_array_final[pos+1];
+
+		if( move_now != move_next)
+		{
+			move_motor(move_array_final[pos], 250);
+		}
+		else
+		{
+			if(move_now <= 12)
+			{
+				if(move_now > 6)
+				{
+					move_now = move_now +14;
+				}
+				else
+				{
+					move_now = move_now+20;
+				}
+				move_motor(move_now, 250);
+				pos++;
+			}
+		}
 		pos++;
 	}
 
@@ -357,6 +381,8 @@ void solve_to_slow_Handler(void)
 	uint32_t time = 0;
 	uint32_t time_ms = 0;
 
+	uint8_t move_now, move_next;
+
 	PWM_frequenz = 2000;
 
 	ssd1309_Fill(Black);
@@ -366,7 +392,29 @@ void solve_to_slow_Handler(void)
 
 	while(move_array_final[pos] != 0)
 	{
-		move_motor(move_array_final[pos], 250);
+		move_now = move_array_final[pos];
+		move_next = move_array_final[pos+1];
+
+		if( move_now != move_next)
+		{
+			move_motor(move_array_final[pos], 250);
+		}
+		else
+		{
+			if(move_now <= 12)
+			{
+				if(move_now > 6)
+				{
+					move_now = move_now +14;
+				}
+				else
+				{
+					move_now = move_now+20;
+				}
+				move_motor(move_now, 250);
+				pos++;
+			}
+		}
 
 		for(uint8_t i=0; i<10; i++)
 		{
@@ -662,10 +710,12 @@ void man_to_solve_Handler(void)
 
 	char s_print[] = "sec";
 	char moves_in[] = "moves";
-	uint32_t erg = 0;
+	uint32_t pos = 0;
 	uint8_t offset = 0;
 	uint32_t time = 0;
 	uint32_t time_ms = 0;
+
+	uint8_t move_now, move_next;
 
 	char buf[] = "solving ..";
 
@@ -674,10 +724,32 @@ void man_to_solve_Handler(void)
 
  	tick_start = tick_count;
 
-	while(msg.m_data[erg] != 0)
+	while(msg.m_data[pos] != 0)
 	{
-		move_motor(msg.m_data[erg], 250);
-		erg++;
+		move_now = msg.m_data[pos];
+		move_next = msg.m_data[pos+1];
+
+		if( move_now != move_next)
+		{
+			move_motor(msg.m_data[pos], 250);
+		}
+		else
+		{
+			if(move_now <= 12)
+			{
+				if(move_now > 6)
+				{
+					move_now = move_now +14;
+				}
+				else
+				{
+					move_now = move_now+20;
+				}
+				move_motor(move_now, 250);
+				pos++;
+			}
+		}
+		pos++;
 	}
 
 	tick_end = tick_count;
@@ -696,7 +768,7 @@ void man_to_solve_Handler(void)
 		offset = 7;
 	}
 
-	itoa(erg,print_moves_num, 10);
+	itoa(pos,print_moves_num, 10);
 	itoa(time,print_time_sec, 10);
 	itoa(time_ms,print_time_ms, 10);
 

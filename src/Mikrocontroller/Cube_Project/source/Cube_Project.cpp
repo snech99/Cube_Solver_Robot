@@ -261,6 +261,8 @@ int main(void)
 	char buf_2[] = "external_PC USB";
 	char buf_e[] = "err in Sensor-Config";
 
+	uint32_t time = 0;
+
     BOARD_InitBootPins();
     BOARD_InitBootClocks();
     BOARD_InitBootPeripherals();
@@ -268,12 +270,20 @@ int main(void)
     SysTick_Config(SystemCoreClock/1000);
 
     GPIO_PinWrite(MOTOR_EN_GPIO, MOTOR_EN_PIN, M_ENABLE);
+
+    tick_start = tick_count;
+
+    while(time < 2000)
+    {
+    	tick_end = tick_count;
+    	time = calc_time_ms();
+    }
+
 	config_motor();
 
+    ssd1309_Init();
     ssd1309_Fill(Black);
     ssd1309_UpdateScreen();
-
-    ssd1309_Init();
 
     if (!tcs.init())
     {
@@ -291,6 +301,10 @@ int main(void)
 
     tcs.write8(TCS34725_PERS, TCS34725_PERS_NONE);
     tcs.setInterrupt(true);
+
+#ifdef STEINBRECHER
+    SW_flag_TL = true;
+#endif
 
 	while(true)
 	{

@@ -564,9 +564,8 @@ BOARD_InitPWM:
     open_drain: disable, drive_strength: low, pull_select: down, pull_enable: disable, input_buffer: enable, invert_input: normal}
   - {pin_num: '44', peripheral: FlexPWM0, signal: 'A, 0', pin_signal: P3_6/CLKOUT/LPSPI1_PCS3/PWM0_A0/FREQME_CLK_OUT1, identifier: PWM_ALL, slew_rate: fast, open_drain: disable,
     drive_strength: low, pull_select: down, pull_enable: disable, input_buffer: enable, invert_input: normal}
-  - {pin_num: '22', peripheral: GPIO2, signal: 'GPIO, 12', pin_signal: P2_12/WUU0_IN20/USB0_VBUS_DET/LPSPI1_SCK/LPUART1_RXD/CT0_MAT0/ADC0_A5, identifier: MOTOR_EN,
-    direction: OUTPUT, gpio_init_state: 'false', slew_rate: fast, open_drain: disable, drive_strength: low, pull_select: down, pull_enable: disable, input_buffer: enable,
-    invert_input: normal}
+  - {pin_num: '21', peripheral: GPIO2, signal: 'GPIO, 7', pin_signal: P2_7/TRIG_IN5/CT_INP19/CT1_MAT3/VREFI/ADC0_A7, identifier: MOTOR_ALL_EN, direction: OUTPUT,
+    gpio_init_state: 'false', slew_rate: fast, open_drain: disable, drive_strength: low, pull_select: down, pull_enable: disable, input_buffer: enable, invert_input: normal}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -648,12 +647,12 @@ void BOARD_InitPWM(void)
     /* Initialize GPIO functionality on pin PIO2_5 (pin 19)  */
     GPIO_PinInit(BOARD_INITPWM_EN_RED_GPIO, BOARD_INITPWM_EN_RED_PIN, &EN_RED_config);
 
-    gpio_pin_config_t MOTOR_EN_config = {
+    gpio_pin_config_t MOTOR_ALL_EN_config = {
         .pinDirection = kGPIO_DigitalOutput,
         .outputLogic = 0U
     };
-    /* Initialize GPIO functionality on pin PIO2_12 (pin 22)  */
-    GPIO_PinInit(BOARD_INITPWM_MOTOR_EN_GPIO, BOARD_INITPWM_MOTOR_EN_PIN, &MOTOR_EN_config);
+    /* Initialize GPIO functionality on pin PIO2_7 (pin 21)  */
+    GPIO_PinInit(BOARD_INITPWM_MOTOR_ALL_EN_GPIO, BOARD_INITPWM_MOTOR_ALL_EN_PIN, &MOTOR_ALL_EN_config);
 
     gpio_pin_config_t EN_GREEN_config = {
         .pinDirection = kGPIO_DigitalOutput,
@@ -782,31 +781,6 @@ void BOARD_InitPWM(void)
     /* PORT2_0 (pin 14) is configured as P2_0 */
     PORT_SetPinConfig(BOARD_INITPWM_DIR_green_PORT, BOARD_INITPWM_DIR_green_PIN, &DIR_green);
 
-    const port_pin_config_t MOTOR_EN = {/* Internal pull-up/down resistor is disabled */
-                                        kPORT_PullDisable,
-                                        /* Low internal pull resistor value is selected. */
-                                        kPORT_LowPullResistor,
-                                        /* Fast slew rate is configured */
-                                        kPORT_FastSlewRate,
-                                        /* Passive input filter is disabled */
-                                        kPORT_PassiveFilterDisable,
-                                        /* Open drain output is disabled */
-                                        kPORT_OpenDrainDisable,
-                                        /* Low drive strength is configured */
-                                        kPORT_LowDriveStrength,
-                                        /* Normal drive strength is configured */
-                                        kPORT_NormalDriveStrength,
-                                        /* Pin is configured as P2_12 */
-                                        kPORT_MuxAlt0,
-                                        /* Digital input enabled */
-                                        kPORT_InputBufferEnable,
-                                        /* Digital input is not inverted */
-                                        kPORT_InputNormal,
-                                        /* Pin Control Register fields [15:0] are not locked */
-                                        kPORT_UnlockRegister};
-    /* PORT2_12 (pin 22) is configured as P2_12 */
-    PORT_SetPinConfig(BOARD_INITPWM_MOTOR_EN_PORT, BOARD_INITPWM_MOTOR_EN_PIN, &MOTOR_EN);
-
     const port_pin_config_t EN_WHITE = {/* Internal pull-up/down resistor is disabled */
                                         kPORT_PullDisable,
                                         /* Low internal pull resistor value is selected. */
@@ -881,6 +855,31 @@ void BOARD_InitPWM(void)
                                       kPORT_UnlockRegister};
     /* PORT2_5 (pin 19) is configured as P2_5 */
     PORT_SetPinConfig(BOARD_INITPWM_EN_RED_PORT, BOARD_INITPWM_EN_RED_PIN, &EN_RED);
+
+    const port_pin_config_t MOTOR_ALL_EN = {/* Internal pull-up/down resistor is disabled */
+                                            kPORT_PullDisable,
+                                            /* Low internal pull resistor value is selected. */
+                                            kPORT_LowPullResistor,
+                                            /* Fast slew rate is configured */
+                                            kPORT_FastSlewRate,
+                                            /* Passive input filter is disabled */
+                                            kPORT_PassiveFilterDisable,
+                                            /* Open drain output is disabled */
+                                            kPORT_OpenDrainDisable,
+                                            /* Low drive strength is configured */
+                                            kPORT_LowDriveStrength,
+                                            /* Normal drive strength is configured */
+                                            kPORT_NormalDriveStrength,
+                                            /* Pin is configured as P2_7 */
+                                            kPORT_MuxAlt0,
+                                            /* Digital input enabled */
+                                            kPORT_InputBufferEnable,
+                                            /* Digital input is not inverted */
+                                            kPORT_InputNormal,
+                                            /* Pin Control Register fields [15:0] are not locked */
+                                            kPORT_UnlockRegister};
+    /* PORT2_7 (pin 21) is configured as P2_7 */
+    PORT_SetPinConfig(BOARD_INITPWM_MOTOR_ALL_EN_PORT, BOARD_INITPWM_MOTOR_ALL_EN_PIN, &MOTOR_ALL_EN);
 
     const port_pin_config_t EN_GREEN = {/* Internal pull-up/down resistor is disabled */
                                         kPORT_PullDisable,

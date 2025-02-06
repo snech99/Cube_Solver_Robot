@@ -536,9 +536,9 @@
                         <pin_feature name="invert_input" value="normal"/>
                      </pin_features>
                   </pin>
-                  <pin peripheral="GPIO2" signal="GPIO, 12" pin_num="22" pin_signal="P2_12/WUU0_IN20/USB0_VBUS_DET/LPSPI1_SCK/LPUART1_RXD/CT0_MAT0/ADC0_A5">
+                  <pin peripheral="GPIO2" signal="GPIO, 7" pin_num="21" pin_signal="P2_7/TRIG_IN5/CT_INP19/CT1_MAT3/VREFI/ADC0_A7">
                      <pin_features>
-                        <pin_feature name="identifier" value="MOTOR_EN"/>
+                        <pin_feature name="identifier" value="MOTOR_ALL_EN"/>
                         <pin_feature name="direction" value="OUTPUT"/>
                         <pin_feature name="gpio_init_state" value="false"/>
                         <pin_feature name="slew_rate" value="fast"/>
