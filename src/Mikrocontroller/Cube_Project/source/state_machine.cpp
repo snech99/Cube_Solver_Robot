@@ -23,8 +23,6 @@ int cube_array[54] = {};
 
 int manual_state_flag = 0;
 
-uint8_t move_count = 0;
-
 uint8_t cube_message[61];
 
 // State-Machine struct with all combinations
@@ -176,6 +174,15 @@ void auto_to_read_color_Handler(void)
 		{
 			color = get_color();
 			cube_array [pos_array_read[pos_read]] = color;
+
+
+			while(!SW_flag_BL)
+			{
+
+			}
+			SW_flag_BL = false;
+
+
 			pos_read++;
 			move_motor(1, 125);
 
@@ -251,7 +258,7 @@ void auto_to_solve_Handler(void)
 		ssd1309_Fill(Black);
 		ssd1309_UpdateScreen();
 
-		move_count = do_magic(cube_array, move_array_final);
+		do_magic(cube_array, move_array_final);
 
 		ssd1309_SetCursor(2,3);
 		ssd1309_WriteString(buf_1,Font_7x10, White);
@@ -279,6 +286,7 @@ void solve_to_fast_Handler(void)
 	uint32_t pos = 0;
 	uint32_t time = 0;
 	uint32_t time_ms = 0;
+	uint16_t move_count = 0;
 
 	uint8_t move_now, move_next;
 
@@ -295,6 +303,8 @@ void solve_to_fast_Handler(void)
 		if( move_now != move_next)
 		{
 			move_motor(move_array_final[pos], 250);
+			move_count++;
+
 		}
 		else
 		{
@@ -309,6 +319,11 @@ void solve_to_fast_Handler(void)
 					move_now = move_now+20;
 				}
 				move_motor(move_now, 250);
+				move_count++;
+				pos++;
+			}
+			else
+			{
 				pos++;
 			}
 		}
@@ -380,6 +395,7 @@ void solve_to_slow_Handler(void)
 	uint32_t pos = 0;
 	uint32_t time = 0;
 	uint32_t time_ms = 0;
+	uint16_t move_count = 0;
 
 	uint8_t move_now, move_next;
 
@@ -398,6 +414,7 @@ void solve_to_slow_Handler(void)
 		if( move_now != move_next)
 		{
 			move_motor(move_array_final[pos], 250);
+			move_count++;
 		}
 		else
 		{
@@ -412,6 +429,11 @@ void solve_to_slow_Handler(void)
 					move_now = move_now+20;
 				}
 				move_motor(move_now, 250);
+				move_count++;
+				pos++;
+			}
+			else
+			{
 				pos++;
 			}
 		}
@@ -714,10 +736,9 @@ void man_to_solve_Handler(void)
 	uint8_t offset = 0;
 	uint32_t time = 0;
 	uint32_t time_ms = 0;
+	uint16_t move_count = 0;
 
 	uint8_t move_now, move_next;
-
-	char buf[] = "solving ..";
 
 	ssd1309_Fill(Black);
 	ssd1309_UpdateScreen();
@@ -732,6 +753,7 @@ void man_to_solve_Handler(void)
 		if( move_now != move_next)
 		{
 			move_motor(msg.m_data[pos], 250);
+			move_count++;
 		}
 		else
 		{
@@ -746,6 +768,11 @@ void man_to_solve_Handler(void)
 					move_now = move_now+20;
 				}
 				move_motor(move_now, 250);
+				move_count++;
+				pos++;
+			}
+			else
+			{
 				pos++;
 			}
 		}

@@ -13,24 +13,23 @@
 color_c detect_color(uint16_t red, uint16_t green, uint16_t blue, uint16_t clear)
 {
 	int sum_pos = green - blue - red;
-	int sum_red = green + blue;
 
-	if(blue > 2050)
+	if(blue > 3600)
 	{
 		return c_white;
 	}
 
 	if(sum_pos > 0)
 	{
-		if(red < 1200)
+		if(red < 2000)
 		{
 			return c_green;
 		}
 	}
 
-	if(red < 1500)
+	if(red < 2300)
 	{
-		if(blue < 850)
+		if(blue < 1300)
 		{
 			return c_red;
 		}
@@ -40,7 +39,7 @@ color_c detect_color(uint16_t red, uint16_t green, uint16_t blue, uint16_t clear
 		}
 	}
 
-	if(sum_red < 2700)
+	if(green < 3600)
 	{
 		return c_orange;
 	}
@@ -67,7 +66,7 @@ uint8_t get_color()
 
 	}
 
-	/*
+
 	char buf_5[5] = {};
 	char buf_6[5] = {};
 	char buf_7[5] = {};
@@ -95,7 +94,7 @@ uint8_t get_color()
 	ssd1309_WriteString(erg_c,Font_7x10, White);
 
 	ssd1309_UpdateScreen();
-	*/
+
 
 	return (uint8_t)detected_color;
 }
