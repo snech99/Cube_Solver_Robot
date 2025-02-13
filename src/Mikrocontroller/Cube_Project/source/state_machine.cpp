@@ -114,6 +114,11 @@ void auto_to_random_Handler(void)
 		last = erg;
 	}
 
+	for(uint8_t i=0; i<54; i++)
+	{
+		cube_array[i] = 0;
+	}
+
 	ssd1309_Fill(Black);
 	ssd1309_UpdateScreen();
 	ssd1309_SetCursor(97,51);
@@ -175,13 +180,13 @@ void auto_to_read_color_Handler(void)
 			color = get_color();
 			cube_array [pos_array_read[pos_read]] = color;
 
-
+			/*
 			while(!SW_flag_BL)
 			{
 
 			}
 			SW_flag_BL = false;
-
+			*/
 
 			pos_read++;
 			move_motor(1, 125);
@@ -286,9 +291,6 @@ void solve_to_fast_Handler(void)
 	uint32_t pos = 0;
 	uint32_t time = 0;
 	uint32_t time_ms = 0;
-	uint16_t move_count = 0;
-
-	uint8_t move_now, move_next;
 
 	ssd1309_Fill(Black);
 	ssd1309_UpdateScreen();
@@ -297,36 +299,7 @@ void solve_to_fast_Handler(void)
 
 	while(move_array_final[pos] != 0)
 	{
-		move_now = move_array_final[pos];
-		move_next = move_array_final[pos+1];
-
-		if( move_now != move_next)
-		{
-			move_motor(move_array_final[pos], 250);
-			move_count++;
-
-		}
-		else
-		{
-			if(move_now <= 12)
-			{
-				if(move_now > 6)
-				{
-					move_now = move_now +14;
-				}
-				else
-				{
-					move_now = move_now+20;
-				}
-				move_motor(move_now, 250);
-				move_count++;
-				pos++;
-			}
-			else
-			{
-				pos++;
-			}
-		}
+		move_motor(move_array_final[pos], 250);
 		pos++;
 	}
 
@@ -341,7 +314,7 @@ void solve_to_fast_Handler(void)
 		offset = 7;
 	}
 
-	itoa(move_count,print_moves_num, 10);
+	itoa(pos,print_moves_num, 10);
 	itoa(time,print_time_sec, 10);
 	itoa(time_ms,print_time_ms, 10);
 
@@ -593,6 +566,11 @@ void man_to_random_Handler(void)
 		last = erg;
 	}
 
+	for(uint8_t i=0; i<54; i++)
+	{
+		cube_array[i] = 0;
+	}
+
 	LPUART_WriteBlocking(LPUART2_PERIPHERAL, busy_msg, sizeof(busy_msg));
 	config_to_man_Handler();
 }
@@ -736,9 +714,6 @@ void man_to_solve_Handler(void)
 	uint8_t offset = 0;
 	uint32_t time = 0;
 	uint32_t time_ms = 0;
-	uint16_t move_count = 0;
-
-	uint8_t move_now, move_next;
 
 	ssd1309_Fill(Black);
 	ssd1309_UpdateScreen();
@@ -747,34 +722,34 @@ void man_to_solve_Handler(void)
 
 	while(msg.m_data[pos] != 0)
 	{
-		move_now = msg.m_data[pos];
-		move_next = msg.m_data[pos+1];
+		switch(msg.m_data[pos])
+		{
+			case 21: 	move_motor(1, 250);
+						move_motor(1, 250);
+						break;
 
-		if( move_now != move_next)
-		{
-			move_motor(msg.m_data[pos], 250);
-			move_count++;
-		}
-		else
-		{
-			if(move_now <= 12)
-			{
-				if(move_now > 6)
-				{
-					move_now = move_now +14;
-				}
-				else
-				{
-					move_now = move_now+20;
-				}
-				move_motor(move_now, 250);
-				move_count++;
-				pos++;
-			}
-			else
-			{
-				pos++;
-			}
+			case 22:	move_motor(2, 250);
+						move_motor(2, 250);
+						break;
+
+			case 23:	move_motor(3, 250);
+						move_motor(3, 250);
+						break;
+
+			case 24:	move_motor(4, 250);
+						move_motor(4, 250);
+						break;
+
+			case 25:	move_motor(5, 250);
+						move_motor(5, 250);
+						break;
+
+			case 26:	move_motor(6, 250);
+						move_motor(6, 250);
+						break;
+
+			default: 	move_motor(msg.m_data[pos], 250);
+						break;
 		}
 		pos++;
 	}

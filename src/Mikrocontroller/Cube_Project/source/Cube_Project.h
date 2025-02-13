@@ -15,7 +15,7 @@
 #ifndef CUBE_PROJECT_H_
 #define CUBE_PROJECT_H_
 
-//#define KRUEGER
+#define KRUEGER
 #ifndef KRUEGER
 #define STEINBRECHER
 #endif

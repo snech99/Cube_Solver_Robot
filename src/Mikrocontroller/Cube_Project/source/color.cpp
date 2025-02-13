@@ -66,7 +66,7 @@ uint8_t get_color()
 
 	}
 
-
+	/*
 	char buf_5[5] = {};
 	char buf_6[5] = {};
 	char buf_7[5] = {};
@@ -94,6 +94,7 @@ uint8_t get_color()
 	ssd1309_WriteString(erg_c,Font_7x10, White);
 
 	ssd1309_UpdateScreen();
+	*/
 
 
 	return (uint8_t)detected_color;
