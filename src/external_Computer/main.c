@@ -10,7 +10,6 @@
 int main(int argc, char *argv[]) 
 {
   char input[3] = {};
-  char c = 0;
   int a = 0;
 
   //Usage
@@ -98,12 +97,11 @@ int main(int argc, char *argv[])
 
                   if(cube_buf[0] == 0)
                   {
-                    printf("Error due reading\n");
+                    printf("Error due reading or no Cube\n");
                   }
                   else 
                   {
                     printf("Cube received!\n");
-
                   }  
 
                   read(serial_port, buf_busy, sizeof(buf_busy));
@@ -192,6 +190,10 @@ int main(int argc, char *argv[])
                     printf("Error: Handshake random\n");
                   }
                   
+                  for (int i=0; i<54; i++)
+                  {
+                    cube_buf[i] = 0;
+                  }
                   printf("\n");
                   printf("Cube scanning: 1\nGet the Cube from Robot: 2\nShow the Cube: 3\nPython-Script: 4\nSend moves and solve: 5\n20 random moves: 6\nChange Cube: 7\nEnd program: 8\n");
                   break;  
@@ -221,19 +223,7 @@ int main(int argc, char *argv[])
         default:  printf("Invalid Number! It must be between 1 and 8.\n"); 
                   break;
       }
-
-      // deletes queue during a task
-      /*
-      if (getchar() != NULL)
-      {
-        while ( getchar() != '\n' )
-        {
-
-        }
-      }
-      */
     }
-    //usleep(1000*100); 
   }
 
   close(serial_port);

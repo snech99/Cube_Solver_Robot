@@ -43,7 +43,9 @@ def write_to_fifo(array):
 def solver():
     
     #random array with 1024 moves
-    erg=[random.randint(1,12) for x in range(1024)]
+    erg=[random.randint(1,12) for x in range(100)]
+
+    #erg = [1,2,3,4,5,6,7,8,9,10,11,12]
     return erg
 
 # main function
