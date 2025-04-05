@@ -17,3 +17,5 @@ sudo ./main my_script
 You need the sudo privileges to be able to access the USB interface.
 
 
+:-------------------------:|:-------------------------:
+![Robot](https://github.com/snech99/Cube_Solver_Robot/pic/Robot.jpg)  |  ![Closeup](https://github.com/snech99/Cube_Solver_Robot/pic/closeup_colorsensor.jpg)

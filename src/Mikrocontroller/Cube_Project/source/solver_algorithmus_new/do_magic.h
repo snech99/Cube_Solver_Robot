@@ -2,7 +2,6 @@
 *   Gerrit Hinrichs 01.2025
 *   github.com/snech99
 *
-*   Cube_Solver_Robot
 *   Header to use the solver on the Microcontroller
 */
 

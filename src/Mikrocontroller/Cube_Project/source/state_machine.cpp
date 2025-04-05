@@ -28,26 +28,26 @@ uint8_t cube_message[61];
 // State-Machine struct with all combinations
 State_Transition transitionTable[] =
 {
-		{config, Taster_T_L, idle_auto, back_to_auto},
-		{config, Taster_B_L, idle_man, config_to_man_Handler},
-		{idle_auto, Taster_T_L, random_auto, auto_to_random_Handler},
-		{idle_auto, Taster_B_L, read_color_auto, auto_to_read_color_Handler},
-		{idle_auto, Taster_T_R, solve_auto, auto_to_solve_Handler},
-		{idle_auto, Taster_B_R, change_cube, auto_to_change_Handler},
-		{solve_auto, Taster_B_R, idle_auto, back_to_auto},
-		{solve_auto, Taster_T_L, fast, solve_to_fast_Handler},
-		{solve_auto, Taster_B_L, slow, solve_to_slow_Handler},
-		{random_auto, Taster_B_R, idle_auto, back_to_auto},
-		{read_color_auto, Taster_B_R, idle_auto, back_to_auto},
-		{fast, Taster_B_R, idle_auto, back_to_auto},
-		{slow, Taster_B_R, idle_auto, back_to_auto},
-		{change_cube, Taster_B_R, idle_auto, back_to_auto},
+	{config, Taster_T_L, idle_auto, back_to_auto},
+	{config, Taster_B_L, idle_man, config_to_man_Handler},
+	{idle_auto, Taster_T_L, random_auto, auto_to_random_Handler},
+	{idle_auto, Taster_B_L, read_color_auto, auto_to_read_color_Handler},
+	{idle_auto, Taster_T_R, solve_auto, auto_to_solve_Handler},
+	{idle_auto, Taster_B_R, change_cube, auto_to_change_Handler},
+	{solve_auto, Taster_B_R, idle_auto, back_to_auto},
+	{solve_auto, Taster_T_L, fast, solve_to_fast_Handler},
+	{solve_auto, Taster_B_L, slow, solve_to_slow_Handler},
+	{random_auto, Taster_B_R, idle_auto, back_to_auto},
+	{read_color_auto, Taster_B_R, idle_auto, back_to_auto},
+	{fast, Taster_B_R, idle_auto, back_to_auto},
+	{slow, Taster_B_R, idle_auto, back_to_auto},
+	{change_cube, Taster_B_R, idle_auto, back_to_auto},
 
-		{idle_man, msg_random, idle_man, man_to_random_Handler},
-		{idle_man, msg_read_color, idle_man, man_to_read_color_Handler},
-		{idle_man, msg_send_cube, idle_man, man_to_send_cube_Handler},
-		{idle_man, msg_solve, idle_man, man_to_solve_Handler},
-		{idle_man, msg_change, idle_man, man_to_change_Handler},
+	{idle_man, msg_random, idle_man, man_to_random_Handler},
+	{idle_man, msg_read_color, idle_man, man_to_read_color_Handler},
+	{idle_man, msg_send_cube, idle_man, man_to_send_cube_Handler},
+	{idle_man, msg_solve, idle_man, man_to_solve_Handler},
+	{idle_man, msg_change, idle_man, man_to_change_Handler},
 };
 
 // State-Machine: from config to external_PC
@@ -93,7 +93,7 @@ void auto_to_random_Handler(void)
 	ssd1309_Fill(Black);
 	ssd1309_UpdateScreen();
 
-	while(pos < 20) //20
+	while(pos < 20)
 	{
 		erg = get_rand_num();
 
@@ -181,7 +181,9 @@ void auto_to_read_color_Handler(void)
 		{
 			color = get_color();
 			cube_array [pos_array_read[pos_read]] = color;
-/*
+
+			/*
+			 * uncomment for Debug-Purpose
 			while(!SW_flag_BL)
 			{
 

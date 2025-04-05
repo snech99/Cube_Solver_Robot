@@ -35,14 +35,12 @@ typedef enum
 	default_event,
 }Event_t;
 
-
 typedef struct {
     State_t current_state;
     Event_t event;
     State_t next_state;
     void (*action)(void);
 } State_Transition;
-
 
 void auto_to_random_Handler(void);
 void auto_to_read_color_Handler(void);

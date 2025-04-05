@@ -1,9 +1,10 @@
 /*
-*	Rubiks´s Cube solver by Gerrit Hinrichs 
-*   06.2024
+*	Rubiks´s Cube solver by Gerrit Hinrichs 06.2024
+*   github.com/snech99
 *
 * 	header for class cube and color enum
 */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>

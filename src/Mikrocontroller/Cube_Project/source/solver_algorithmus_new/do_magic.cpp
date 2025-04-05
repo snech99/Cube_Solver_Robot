@@ -2,11 +2,8 @@
 *   Gerrit Hinrichs 01.2025
 *   github.com/snech99
 *
-*   Cube_Solver_Robot
 *   file to use the solver on the Microcontroller
 */
-
-
 #include "cube.h"
 #include "game.h"
 #include "do_magic.h"

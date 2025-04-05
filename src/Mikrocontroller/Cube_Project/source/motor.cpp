@@ -84,32 +84,32 @@ void config_motor()
 		{
 			case 1: 	GPIO_PinWrite(DIR_WHITE_GPIO, DIR_WHITE_PIN, 1);
 						GPIO_PinWrite(EN_WHITE_GPIO, EN_WHITE_PIN, 1);
-						config_count = 35; // 31
+						config_count = 35;
 						break;
 
 			case 2:		GPIO_PinWrite(DIR_YELLOW_GPIO, DIR_YELLOW_PIN, 0);
 						GPIO_PinWrite(EN_YELLOW_GPIO, EN_YELLOW_PIN, 1);
-						config_count =10; // 11
+						config_count =10; 
 						break;
 
 			case 3:		GPIO_PinWrite(DIR_RED_GPIO, DIR_RED_PIN, 0);
 						GPIO_PinWrite(EN_RED_GPIO, EN_RED_PIN, 1);
-						config_count = 97; //100
+						config_count = 97; 
 						break;
 
 			case 4:		GPIO_PinWrite(DIR_GREEN_GPIO, DIR_GREEN_PIN, 0);
 						GPIO_PinWrite(EN_GREEN_GPIO, EN_GREEN_PIN, 1);
-						config_count = 15; //DONE
+						config_count = 15; 
 						break;
 
 			case 5:		GPIO_PinWrite(DIR_ORANGE_GPIO, DIR_ORANGE_PIN, 0);
 						GPIO_PinWrite(EN_ORANGE_GPIO, EN_ORANGE_PIN, 1);
-						config_count = 47; //DONE
+						config_count = 47; 
 						break;
 
 			case 6:		GPIO_PinWrite(DIR_BLUE_GPIO, DIR_BLUE_PIN, 0);
 						GPIO_PinWrite(EN_BLUE_GPIO, EN_BLUE_PIN, 1);
-						config_count = 17; //DONE
+						config_count = 17; 
 						break;
 			default:
 				break;

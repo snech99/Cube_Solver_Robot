@@ -15,11 +15,13 @@
 #ifndef CUBE_PROJECT_H_
 #define CUBE_PROJECT_H_
 
-
 /*
- * Frequenz Servo Krüger: 78
- * Frequenz Servo Steinbrecher 81
+ * Changes to do during change: 
+ *
+ * Frequenz Servo Krüger: 		78
+ * Frequenz Servo Steinbrecher 	81
  */
+
 //#define KRUEGER
 #ifndef KRUEGER
 #define STEINBRECHER
@@ -143,6 +145,5 @@ void change_sides(uint8_t);
 bool check_colors();
 uint32_t calc_time_ms();
 void config_motor();
-
 
 #endif

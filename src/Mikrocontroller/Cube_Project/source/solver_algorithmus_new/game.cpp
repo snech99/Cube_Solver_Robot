@@ -1,6 +1,6 @@
 /*
-*	Rubiks´s Cube solver by Gerrit Hinrichs 
-*   06.2024
+*	Rubiks´s Cube solver by Gerrit Hinrichs 06.2024
+*   github.com/snech99
 *
 * 	class game member functions
 */
