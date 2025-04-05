@@ -93,7 +93,7 @@ void auto_to_random_Handler(void)
 	ssd1309_Fill(Black);
 	ssd1309_UpdateScreen();
 
-	while(pos < 20)
+	while(pos < 20) //20
 	{
 		erg = get_rand_num();
 
@@ -164,8 +164,10 @@ void auto_to_read_color_Handler(void)
 	for(uint8_t i=0; i<6; i++)
 	{
 		PWM_ramp_time = RAMP_SHORT;
+
 		move_servo(15);
-		for( uint8_t i=0; i<5; i++)
+
+		for( uint8_t i=0; i<6; i++)
 		{
 			pwm_servo_busy_flag = true;
 			CTIMER_StartTimer(CTIMER2);
@@ -179,8 +181,7 @@ void auto_to_read_color_Handler(void)
 		{
 			color = get_color();
 			cube_array [pos_array_read[pos_read]] = color;
-
-			/*
+/*
 			while(!SW_flag_BL)
 			{
 
@@ -191,7 +192,7 @@ void auto_to_read_color_Handler(void)
 			pos_read++;
 			move_motor(1, 125);
 
-			for( uint8_t i=0; i<11; i++)
+			for( uint8_t i=0; i<13; i++)
 			{
 				pwm_servo_busy_flag = true;
 				CTIMER_StartTimer(CTIMER2);
@@ -481,6 +482,7 @@ void solve_to_slow_Handler(void)
 void auto_to_change_Handler (void)
 {
 	char buf_1[] = "Change done";
+	uint32_t time = 0;
 
     ssd1309_Fill(Black);
     ssd1309_UpdateScreen();
@@ -502,6 +504,13 @@ void auto_to_change_Handler (void)
     ssd1309_UpdateScreen();
 
 	GPIO_PinWrite(MOTOR_EN_GPIO, MOTOR_EN_PIN, M_ENABLE);
+
+    tick_start = tick_count;
+    while(time < 100)
+    {
+    	tick_end = tick_count;
+    	time = calc_time_ms();
+    }
 
 	config_motor();
 

@@ -12,6 +12,7 @@
 // returns the color based on the RGB value
 color_c detect_color(uint16_t red, uint16_t green, uint16_t blue, uint16_t clear)
 {
+#ifdef KRUEGER
 	int sum_pos = green - blue - red;
 
 	if(blue > 3600)
@@ -44,6 +45,37 @@ color_c detect_color(uint16_t red, uint16_t green, uint16_t blue, uint16_t clear
 		return c_orange;
 	}
 	return c_yellow;
+#else
+	int sum_pos = green - blue - red;
+
+	if(blue > 1600)
+	{
+		return c_white;
+	}
+
+	if(sum_pos > 0)
+	{
+		return c_green;
+	}
+
+	if(red < 2250)
+	{
+		if(red < 870)
+		{
+			return c_blue;
+		}
+		else
+		{
+			return c_red;
+		}
+	}
+
+	if(green < 2250)
+	{
+		return c_orange;
+	}
+	return c_yellow;
+#endif
 }
 
 // reading of the RGB value and returning the color
@@ -94,8 +126,7 @@ uint8_t get_color()
 	ssd1309_WriteString(erg_c,Font_7x10, White);
 
 	ssd1309_UpdateScreen();
-	*/
-
+*/
 
 	return (uint8_t)detected_color;
 }

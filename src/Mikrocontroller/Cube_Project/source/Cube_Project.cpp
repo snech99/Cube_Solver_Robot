@@ -271,8 +271,6 @@ int main(void)
 
     GPIO_PinWrite(MOTOR_EN_GPIO, MOTOR_EN_PIN, M_ENABLE);
 
-
-
 #ifdef STEINBRECHER
     tick_start = tick_count;
     while(time < 2000)
@@ -281,7 +279,6 @@ int main(void)
     	time = calc_time_ms();
     }
 #endif
-
 
 	config_motor();
 

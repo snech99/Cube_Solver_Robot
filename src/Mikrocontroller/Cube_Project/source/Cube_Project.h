@@ -15,7 +15,12 @@
 #ifndef CUBE_PROJECT_H_
 #define CUBE_PROJECT_H_
 
-#define KRUEGER
+
+/*
+ * Frequenz Servo Krüger: 78
+ * Frequenz Servo Steinbrecher 81
+ */
+//#define KRUEGER
 #ifndef KRUEGER
 #define STEINBRECHER
 #endif
