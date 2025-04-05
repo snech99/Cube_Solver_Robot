@@ -18,4 +18,4 @@ You need the sudo privileges to be able to access the USB interface.
 
 
 :-------------------------:|:-------------------------:
-![Robot](https://github.com/snech99/Cube_Solver_Robot/pic/Robot.jpg?raw=true)  |  ![Closeup](https://github.com/snech99/Cube_Solver_Robot/pic/closeup_colorsensor.jpg?raw=true)
+![Robot](https://github.com/snech99/Cube_Solver_Robot/blob/main/pic/Robot.jpg)  |  ![Closeup](https://github.com/snech99/Cube_Solver_Robot/blob/main/pic/closeup_colorsensor.jpg)
