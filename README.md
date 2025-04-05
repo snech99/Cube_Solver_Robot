@@ -10,13 +10,14 @@ The automatic mode solves the cube using an algorithm we wrote ourselves. It is 
 This Code can be found under the following link: [Repo](https://github.com/snech99/Rubiks_Cube_Algorithm)
 
 For external communication, the algorithm must be written by the user. There is a Python template for this, which communicates with the robot via a C program.
-Download the folder /src/external_PC and compile the C program with make. You can then start the program as follows:
+Download the folder /src/external_PC and compile the C program with make. You can then start the program as follows. You need the sudo privileges to be able to access the USB interface:
+
 ```bash
 sudo ./main my_script
 ```
-You need the sudo privileges to be able to access the USB interface.
 
+Here are some pictures to get an impression:
 
-| Robot                  | Closeup                |
+| Robot                  | Closeup of the colorsensor               |
 | ---------------------- | ---------------------- |
 | ![Robot](https://github.com/snech99/Cube_Solver_Robot/blob/main/pic/Robot.jpg) |  ![Closeup](https://github.com/snech99/Cube_Solver_Robot/blob/main/pic/closeup_colorsensor.jpg) |
